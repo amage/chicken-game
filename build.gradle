@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+}
+
+defaultTasks 'jar'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+compileJava.options.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    /* Test */
+    testCompile 'junit:junit:4.8.2'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.4.1'
+}
