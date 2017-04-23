@@ -4,12 +4,18 @@ import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
@@ -61,15 +67,26 @@ public class Game extends Application {
         vBox.getChildren().add(text);
         vBox.getChildren().add(imgView2);
 
-        final Scene scene = new Scene(vBox);
-        primaryStage.setScene(scene);
-        // primaryStage.setScene(loginScene);
+//        final Scene scene = new Scene(vBox);
+        // primaryStage.setScene(scene);
+        primaryStage.setScene(loginScene);
         primaryStage.show();
     }
 
     private Scene loginScene() {
-        final VBox vBox = new VBox();
-        return new Scene(vBox);
+        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.CENTER);
+        pane.setHgap(20);
+        pane.setVgap(20);
+        pane.add(new Label("Данные об испытуемом"), 0, 0, 2, 1);
+        pane.add(new Label("Номер"), 0, 1);
+        pane.add(new TextField(), 1, 1);
+        HBox bbox = new HBox();
+        Button button = new Button("Старт");
+        bbox.getChildren().add(button);
+        bbox.setAlignment(Pos.BOTTOM_RIGHT);
+        pane.add(bbox, 0, 2, 2, 1);
+        return new Scene(pane);
     }
 
 }
