@@ -1,17 +1,28 @@
 package ru.highcode.chicken;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 public class CarWay extends Pane {
+    // TODO: Game stop timer
+    // TODO: Game stop length
+    // TODO: history
+
     private static final Image car = new Image("file:car.png");
     private static final double CAR_HEIGHT = car.getHeight();
     private static final double CAR_WIDTH = car.getWidth();
     private final Canvas canvas = new Canvas();
     private double carPos = 0;
+    private final double velocity;
+    private long startNanoTime;
 
-    public CarWay() {
+    private boolean run = false;
+
+    public CarWay(double velocity) {
+        this.velocity = velocity;
+        setCarPos(CAR_WIDTH);
         getChildren().add(canvas);
         setMinHeight(CAR_HEIGHT);
     }
@@ -20,10 +31,25 @@ public class CarWay extends Pane {
         return carPos;
     }
 
+    public void startEngine() {
+        if (run) {
+            return;
+        }
+        System.out.println("Start engine!");
+        startNanoTime = System.nanoTime();
+        run = true;
+    }
+
+    public void stopEngine() {
+        System.out.println("stop");
+        run = false;
+    }
+
     public void setCarPos(double carPos) {
-        canvas.getGraphicsContext2D().clearRect(this.carPos, 0, CAR_WIDTH, CAR_HEIGHT);
+        final GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(this.carPos, 0, CAR_WIDTH, CAR_HEIGHT);
         this.carPos = carPos;
-        canvas.getGraphicsContext2D().drawImage(car, carPos, 0);
+        gc.drawImage(car, carPos, 0);
     }
 
     @Override
@@ -41,5 +67,14 @@ public class CarWay extends Pane {
             canvas.setHeight(CAR_HEIGHT);
             setMinWidth(w);
         }
+    }
+
+    public void update(long currentNanoTime) {
+        if (!run) {
+            return;
+        }
+        final double dt = (currentNanoTime = startNanoTime) / 1000000000.0;
+        final double x = getCarPos();
+        setCarPos(x + velocity + dt);
     }
 }
