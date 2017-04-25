@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -48,6 +50,10 @@ public class SceneFactory {
 
     public static Scene gameScene() {
         final VBox pane = new VBox();
+        final Image tlGreen = new Image("file:green.png");
+        final Image tlYellow = new Image("file:yellow.png");
+        final Image tlRed = new Image("file:red.png");
+
         pane.setAlignment(Pos.CENTER);
 
         final GridPane scorePane = new GridPane();
@@ -58,7 +64,8 @@ public class SceneFactory {
         scorePane.add(new Text("0"), 1, 1);
 
         pane.getChildren().add(scorePane);
-        pane.getChildren().add(new Text("Светофор"));
+        final ImageView trafficLight = new ImageView(tlGreen);
+        pane.getChildren().add(trafficLight);
 
         final CarWay carWay = new CarWay(150);
         carWay.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.DASHED, null, null)));
@@ -68,6 +75,15 @@ public class SceneFactory {
         final AnimationTimer at = new AnimationTimer() {
             @Override
             public void handle(long currentNanoTime) {
+                // TODO remove after test
+                if(trafficLight.getImage() == tlRed) {
+                    trafficLight.setImage(tlYellow);
+                } else if (trafficLight.getImage() == tlYellow) {
+                    trafficLight.setImage(tlGreen);
+                } else if (trafficLight.getImage() == tlGreen) {
+                    trafficLight.setImage(tlRed);
+                }
+
                 carWay.update(currentNanoTime);
             }
         };
