@@ -16,8 +16,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class GameRoundScene {
-    // TODO refactor logic
     // TODO clean layout
+    // TODO tune and restrict car speed and max round time
+    // TODO refactor logic
+    // TODO log writer
     private final Scene scene;
     private final double totalTime;
 
@@ -32,11 +34,14 @@ public class GameRoundScene {
         pane.setAlignment(Pos.CENTER);
         final GridPane scorePane = new GridPane();
 
-        scorePane.add(new Text("Total Bank Account: "), 0, 0);
         final Text roundTimeText = new Text("0");
-        scorePane.add(new Text("0"), 1, 0);
+        final Text currentScoreText = new Text("0");
+        final Text totalScoreText = new Text("0");
+
+        scorePane.add(new Text("Total Bank Account: "), 0, 0);
+        scorePane.add(totalScoreText, 1, 0);
         scorePane.add(new Text("Total Points Earned: "), 0, 1);
-        scorePane.add(new Text("0"), 1, 1);
+        scorePane.add(currentScoreText, 1, 1);
         scorePane.add(new Text("Time: "), 0, 2);
         scorePane.add(roundTimeText, 1, 2);
 
@@ -65,6 +70,7 @@ public class GameRoundScene {
                         trafficLight.setImage(TrafficLightState.RED.getImage());
                     }
                     carWay.stop();
+                    this.stop();
                     if (carWay.isWin()) {
                         roundTimeText.setText("WIN!!!");
                     } else {
