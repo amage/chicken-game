@@ -6,8 +6,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 public class CarWay extends Pane {
-    // TODO: Game stop timer
-    // TODO: Game stop length
     // TODO: history
 
     private static final Image car = new Image("file:car.png");
@@ -17,15 +15,17 @@ public class CarWay extends Pane {
     private double carPos = 0;
     private final double velocity;
     private long startNanoTime;
+    private long roundStartNanoTime;
     private double startPos;
 
     private boolean run = false;
+    private Boolean win;
 
     public CarWay(double velocity) {
         this.velocity = velocity;
-        setCarPos(-CAR_WIDTH);
         getChildren().add(canvas);
         setMinHeight(CAR_HEIGHT);
+        setCarPos(-CAR_WIDTH / 2);
     }
 
     public double getCarPos() {
@@ -33,8 +33,12 @@ public class CarWay extends Pane {
     }
 
     public void startEngine() {
-        if (run) {
+        if (run || win != null) {
             return;
+        }
+        startNanoTime = System.nanoTime();
+        if (getRoundStartNanoTime() == 0) {
+            roundStartNanoTime = startNanoTime;
         }
         startNanoTime = System.nanoTime();
         startPos = getCarPos();
@@ -66,6 +70,7 @@ public class CarWay extends Pane {
             canvas.setWidth(w);
             canvas.setHeight(CAR_HEIGHT);
             setMinWidth(w);
+            canvas.getGraphicsContext2D().drawImage(car, carPos, 0);
         }
     }
 
@@ -75,5 +80,25 @@ public class CarWay extends Pane {
         }
         final double dt = (currentNanoTime - startNanoTime) / 1000000000.0;
         setCarPos(startPos + velocity * dt);
+    }
+
+    public long getRoundStartNanoTime() {
+        return roundStartNanoTime;
+    }
+
+    public void stop() {
+        if (win != null) {
+            return;
+        }
+        if (run) {
+            stopEngine();
+            win = false;
+        } else {
+            win = true;
+        }
+    }
+
+    public boolean isWin() {
+        return win;
     }
 }

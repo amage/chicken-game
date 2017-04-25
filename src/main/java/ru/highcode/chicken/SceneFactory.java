@@ -1,21 +1,13 @@
 package ru.highcode.chicken;
 
-import javafx.animation.AnimationTimer;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -49,57 +41,7 @@ public class SceneFactory {
     }
 
     public static Scene gameScene() {
-        final VBox pane = new VBox();
-        final Image tlGreen = new Image("file:green.png");
-        final Image tlYellow = new Image("file:yellow.png");
-        final Image tlRed = new Image("file:red.png");
-
-        pane.setAlignment(Pos.CENTER);
-
-        final GridPane scorePane = new GridPane();
-
-        scorePane.add(new Text("Total Bank Account: "), 0, 0);
-        scorePane.add(new Text("0"), 1, 0);
-        scorePane.add(new Text("Total Points Earned: "), 0, 1);
-        scorePane.add(new Text("0"), 1, 1);
-
-        pane.getChildren().add(scorePane);
-        final ImageView trafficLight = new ImageView(tlGreen);
-        pane.getChildren().add(trafficLight);
-
-        final CarWay carWay = new CarWay(150);
-        carWay.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.DASHED, null, null)));
-
-        pane.getChildren().add(carWay);
-
-        final AnimationTimer at = new AnimationTimer() {
-            @Override
-            public void handle(long currentNanoTime) {
-                // TODO remove after test
-                if(trafficLight.getImage() == tlRed) {
-                    trafficLight.setImage(tlYellow);
-                } else if (trafficLight.getImage() == tlYellow) {
-                    trafficLight.setImage(tlGreen);
-                } else if (trafficLight.getImage() == tlGreen) {
-                    trafficLight.setImage(tlRed);
-                }
-
-                carWay.update(currentNanoTime);
-            }
-        };
-        at.start();
-
-        final Scene scene = new Scene(pane, 800, 600);
-        scene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.SPACE) {
-                carWay.startEngine();
-            }
-        });
-        scene.setOnKeyReleased(e -> {
-            if (e.getCode() == KeyCode.SPACE) {
-                carWay.stopEngine();
-            }
-        });
-        return scene;
+        final GameRoundScene gscene = new GameRoundScene(4);
+        return gscene.getScene();
     }
 }
