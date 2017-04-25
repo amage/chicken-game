@@ -9,7 +9,6 @@ public class CarWay extends Pane {
     // TODO: Game stop timer
     // TODO: Game stop length
     // TODO: history
-    // TODO: something wrong with physics
 
     private static final Image car = new Image("file:car.png");
     private static final double CAR_HEIGHT = car.getHeight();
@@ -18,6 +17,7 @@ public class CarWay extends Pane {
     private double carPos = 0;
     private final double velocity;
     private long startNanoTime;
+    private double startPos;
 
     private boolean run = false;
 
@@ -36,13 +36,12 @@ public class CarWay extends Pane {
         if (run) {
             return;
         }
-        System.out.println("Start engine!");
         startNanoTime = System.nanoTime();
+        startPos = getCarPos();
         run = true;
     }
 
     public void stopEngine() {
-        System.out.println("stop");
         run = false;
     }
 
@@ -75,8 +74,6 @@ public class CarWay extends Pane {
             return;
         }
         final double dt = (currentNanoTime - startNanoTime) / 1000000000.0;
-        final double x = getCarPos();
-        setCarPos(x + velocity * dt);
-        currentNanoTime = System.currentTimeMillis();
+        setCarPos(startPos + velocity * dt);
     }
 }

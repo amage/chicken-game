@@ -60,7 +60,7 @@ public class SceneFactory {
         pane.getChildren().add(scorePane);
         pane.getChildren().add(new Text("Светофор"));
 
-        final CarWay carWay = new CarWay(1);
+        final CarWay carWay = new CarWay(150);
         carWay.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.DASHED, null, null)));
 
         pane.getChildren().add(carWay);
@@ -73,17 +73,17 @@ public class SceneFactory {
         };
         at.start();
 
-        carWay.setFocusTraversable(true);
-        carWay.setOnKeyPressed(e -> {
+        final Scene scene = new Scene(pane, 800, 600);
+        scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.SPACE) {
                 carWay.startEngine();
             }
         });
-        carWay.setOnKeyReleased(e -> {
+        scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.SPACE) {
-                carWay.startEngine();
+                carWay.stopEngine();
             }
         });
-        return new Scene(pane, 800, 600);
+        return scene;
     }
 }
