@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Border;
@@ -27,7 +28,7 @@ public class GameRoundScene {
      * @param totalTime
      *            round time in seconds.
      */
-    public GameRoundScene(double totalTime) {
+    public GameRoundScene(double totalTime, ISceneSwitcher switcher) {
         this.totalTime =totalTime;
         final VBox pane = new VBox();
 
@@ -37,6 +38,11 @@ public class GameRoundScene {
         final Text roundTimeText = new Text("0");
         final Text currentScoreText = new Text("0");
         final Text totalScoreText = new Text("0");
+        final Button nextButton = new Button("Продолжить");
+        nextButton.setOnAction(e -> {
+            switcher.nextScene();
+        });
+        nextButton.setVisible(false);
 
         scorePane.add(new Text("Total Bank Account: "), 0, 0);
         scorePane.add(totalScoreText, 1, 0);
@@ -53,6 +59,7 @@ public class GameRoundScene {
         carWay.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.DASHED, null, null)));
 
         pane.getChildren().add(carWay);
+        pane.getChildren().add(nextButton);
 
         final AnimationTimer at = new AnimationTimer() {
             @Override
@@ -71,6 +78,8 @@ public class GameRoundScene {
                     }
                     carWay.stop();
                     this.stop();
+                    nextButton.setVisible(true);
+                    nextButton.setFocusTraversable(false);
                     if (carWay.isWin()) {
                         roundTimeText.setText("WIN!!!");
                     } else {

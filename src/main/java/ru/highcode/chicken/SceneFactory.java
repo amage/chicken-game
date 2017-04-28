@@ -12,7 +12,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class SceneFactory {
-    public static Scene textScene(String text) {
+    public static Scene textScene(String text, ISceneSwitcher switcher) {
         final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         final Text t = new Text(text);
@@ -20,11 +20,15 @@ public class SceneFactory {
         t.setTextAlignment(TextAlignment.JUSTIFY);
         pane.setSpacing(50);
         pane.getChildren().add(t);
-        pane.getChildren().add(new Button("Продолжить"));
+        final Button nextButton = new Button("Продолжить");
+        pane.getChildren().add(nextButton);
+        nextButton.setOnAction(e -> {
+            switcher.nextScene();
+        });
         return new Scene(pane);
     }
 
-    public static Scene loginScene() {
+    public static Scene loginScene(ISceneSwitcher switcher) {
         final GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
@@ -34,14 +38,17 @@ public class SceneFactory {
         pane.add(new TextField(), 1, 1);
         final HBox bbox = new HBox();
         final Button button = new Button("Старт");
+        button.setOnAction(e -> {
+            switcher.nextScene();
+        });
         bbox.getChildren().add(button);
         bbox.setAlignment(Pos.BOTTOM_RIGHT);
         pane.add(bbox, 0, 2, 2, 1);
         return new Scene(pane);
     }
 
-    public static Scene gameScene() {
-        final GameRoundScene gscene = new GameRoundScene(4);
+    public static Scene gameScene(ISceneSwitcher switcher) {
+        final GameRoundScene gscene = new GameRoundScene(4, switcher);
         return gscene.getScene();
     }
 }
