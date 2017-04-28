@@ -17,6 +17,7 @@ public class CarWay extends Pane {
     private long startNanoTime;
     private long roundStartNanoTime;
     private double startPos;
+    private final ExperimentHistory history = new ExperimentHistory();
 
     private boolean run = false;
     private Boolean win;
