@@ -1,6 +1,10 @@
 package ru.highcode.chicken;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Properties;
 
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Pos;
@@ -22,14 +26,19 @@ public class GameRoundScene {
     // TODO refactor logic
     // TODO log writer
     private final Scene scene;
-    private final double totalTime;
+    private final double roundTime;
+    private final Properties settings = new Properties();
 
     /**
-     * @param totalTime
+     * @param roundTime
      *            round time in seconds.
+     * @throws IOException
+     * @throws FileNotFoundException
      */
-    public GameRoundScene(double totalTime, ISceneSwitcher switcher) {
-        this.totalTime =totalTime;
+    public GameRoundScene(String gameName, ISceneSwitcher switcher) throws FileNotFoundException, IOException {
+        settings.load(new FileReader("game.cfg"));
+
+        this.roundTime = Long.parseLong(settings.getProperty(gameName + ".roundTime"));
         final VBox pane = new VBox();
 
         pane.setAlignment(Pos.CENTER);
@@ -55,7 +64,9 @@ public class GameRoundScene {
         final ImageView trafficLight = new ImageView(TrafficLightState.GREEN.getImage());
         pane.getChildren().add(trafficLight);
 
-        final CarWay carWay = new CarWay(10);
+        final double carSpeed = Double.parseDouble(settings.getProperty("car.speed"));
+        // TODO auto calculation best fit speed.
+        final CarWay carWay = new CarWay(carSpeed);
         carWay.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.DASHED, null, null)));
 
         pane.getChildren().add(carWay);
@@ -108,7 +119,7 @@ public class GameRoundScene {
     private boolean isRoundStarted(final CarWay carWay, long currentNanoTime) {
         if (carWay.getRoundStartNanoTime() > 0) {
             final double time = (currentNanoTime - carWay.getRoundStartNanoTime()) / 1000000000.0;
-            if (time <= totalTime) {
+            if (time <= roundTime) {
                 return true;
             }
         }
@@ -118,7 +129,7 @@ public class GameRoundScene {
     private boolean isRoundEnded(final CarWay carWay, long currentNanoTime) {
         if (carWay.getRoundStartNanoTime() > 0) {
             final double time = (currentNanoTime - carWay.getRoundStartNanoTime()) / 1000000000.0;
-            if (time > totalTime) {
+            if (time > roundTime) {
                 return true;
             }
         }

@@ -1,5 +1,7 @@
 package ru.highcode.chicken;
 
+import java.io.IOException;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -47,8 +49,8 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene gameScene(ISceneSwitcher switcher) {
-        final GameRoundScene gscene = new GameRoundScene(4, switcher);
+    public static Scene gameScene(String gameName, ISceneSwitcher switcher) throws IOException {
+        final GameRoundScene gscene = new GameRoundScene(gameName, switcher);
         return gscene.getScene();
     }
 }

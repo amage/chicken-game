@@ -32,7 +32,7 @@ public class Game extends Application implements ISceneSwitcher {
         addScene(SceneFactory.loginScene(this));
         // TODO intro texts
         addScene(SceneFactory.textScene(texts.get("1"), this));
-        addScene(SceneFactory.gameScene(this));
+        addScene(SceneFactory.gameScene("1", this));
         addScene(SceneFactory.textScene(texts.get("1"), this));
 
         primaryStage.setScene(scenario.get(currentScene));
@@ -46,7 +46,7 @@ public class Game extends Application implements ISceneSwitcher {
     @Override
     public void nextScene() {
         currentScene = currentScene + 1;
-        if (currentScene > scenario.size()) {
+        if (currentScene == scenario.size()) {
             currentScene = 0;
         }
         final Scene scene = scenario.get(currentScene);
