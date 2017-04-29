@@ -7,11 +7,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.util.converter.NumberStringConverter;
 
 public class SceneFactory {
     public static Scene textScene(String text, ISceneSwitcher switcher) {
@@ -30,14 +32,25 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene loginScene(ISceneSwitcher switcher) {
+    public static Scene loginScene(ExperimentHistory experiment, ISceneSwitcher switcher) {
         final GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
         pane.setVgap(20);
         pane.add(new Label("Данные об испытуемом"), 0, 0, 2, 1);
         pane.add(new Label("Номер"), 0, 1);
-        pane.add(new TextField(), 1, 1);
+
+        final TextField playerNumber = new TextField();
+        playerNumber.textProperty().bindBidirectional(experiment.playerNumberProperty(), new NumberStringConverter());
+        playerNumber.setTextFormatter(new TextFormatter<>(c -> {
+            try {
+                Integer.parseInt(c.getControlNewText());
+            } catch (final Exception e) {
+                return null;
+            }
+            return c;
+        }));
+        pane.add(playerNumber, 1, 1);
         final HBox bbox = new HBox();
         final Button button = new Button("Старт");
         button.setOnAction(e -> {
