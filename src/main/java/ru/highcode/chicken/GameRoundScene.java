@@ -30,12 +30,14 @@ public class GameRoundScene {
     private final Properties settings = new Properties();
 
     /**
+     * @param experiment
      * @param roundTime
      *            round time in seconds.
      * @throws IOException
      * @throws FileNotFoundException
      */
-    public GameRoundScene(String gameName, ISceneSwitcher switcher) throws FileNotFoundException, IOException {
+    public GameRoundScene(String gameName, ExperimentHistory experiment, ISceneSwitcher switcher)
+            throws FileNotFoundException, IOException {
         settings.load(new FileReader("game.cfg"));
 
         this.roundTime = Long.parseLong(settings.getProperty(gameName + ".roundTime"));
