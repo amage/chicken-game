@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import ru.highcode.chicken.data.Experiment;
 
 public class Game extends Application implements ISceneSwitcher {
+    public static final String PRACTICS_NAME_1 = "practics1";
+    public static final String PRACTICS_NAME_2 = "practics2";
     private final List<Scene> scenario = new ArrayList<>();
     private Stage primaryStage;
     private int currentScene = 0;
@@ -33,11 +35,22 @@ public class Game extends Application implements ISceneSwitcher {
 
         // Login scene
         // TODO: addScene(SceneFactory.loginScene(experiment, this));
-        // TODO: intro texts
-        // addScene(SceneFactory.textScene(texts.get("1"), this));
-        addScene(SceneFactory.gameScene("1", experiment, this));
-        // addScene(SceneFactory.rateGameScene("1", experiment, this));
-        // addScene(SceneFactory.textScene(texts.get("1"), this));
+        // texts
+        addScene(SceneFactory.textScene(texts.get("1"), this));
+        addScene(SceneFactory.textScene(texts.get("2"), this));
+
+        addScene(SceneFactory.gameScene(PRACTICS_NAME_1, experiment, this));
+
+        addScene(SceneFactory.textScene(texts.get("3"), this));
+
+        addScene(SceneFactory.gameScene(PRACTICS_NAME_2, experiment, this));
+
+        addScene(SceneFactory.textScene(texts.get("4"), this));
+        for (int i = 1; i <= 15; i++) {
+            addScene(SceneFactory.gameScene(String.valueOf(i), experiment, this));
+            addScene(SceneFactory.rateGameScene(String.valueOf(i), experiment, this));
+        }
+        addScene(SceneFactory.textScene(texts.get("4"), this));
 
         primaryStage.setScene(scenario.get(currentScene));
         primaryStage.show();
