@@ -19,6 +19,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import ru.highcode.chicken.data.Experiment;
+import ru.highcode.chicken.data.Round;
 
 public class GameRoundScene {
     // TODO clean layout
@@ -28,7 +30,7 @@ public class GameRoundScene {
     private final Scene scene;
     private final double roundTime;
     private final Properties settings = new Properties();
-
+    private final Round round;
     /**
      * @param experiment
      * @param roundTime
@@ -36,10 +38,10 @@ public class GameRoundScene {
      * @throws IOException
      * @throws FileNotFoundException
      */
-    public GameRoundScene(String gameName, ExperimentHistory experiment, ISceneSwitcher switcher)
+    public GameRoundScene(String gameName, Experiment experiment, ISceneSwitcher switcher)
             throws FileNotFoundException, IOException {
         settings.load(new FileReader("game.cfg"));
-
+        this.round = experiment.getRound(gameName);
         this.roundTime = Long.parseLong(settings.getProperty(gameName + ".roundTime"));
         final VBox pane = new VBox();
 
@@ -67,7 +69,7 @@ public class GameRoundScene {
         pane.getChildren().add(trafficLight);
 
 
-        final CarWay carWay = new CarWay(settings);
+        final CarWay carWay = new CarWay(settings, round);
         carWay.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.DASHED, null, null)));
 
         pane.getChildren().add(carWay);
@@ -82,6 +84,10 @@ public class GameRoundScene {
                         trafficLight.setImage(TrafficLightState.YELLOW.getImage());
                     }
                     final double time = (currentNanoTime - carWay.getRoundStartNanoTime()) / 1000000000.0;
+
+                    currentScoreText.setText(String.valueOf(round.getTotalScore()));
+                    totalScoreText.setText(String.valueOf(experiment.getTotalScore()));
+                    ;
                     roundTimeText.setText(new DecimalFormat("#.#").format(time));
                 }
                 if (isRoundEnded(carWay, currentNanoTime)) {

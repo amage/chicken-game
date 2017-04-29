@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.converter.NumberStringConverter;
+import ru.highcode.chicken.data.Experiment;
 
 public class SceneFactory {
     public static Scene textScene(String text, ISceneSwitcher switcher) {
@@ -33,7 +34,7 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene loginScene(ExperimentHistory experiment, ISceneSwitcher switcher) {
+    public static Scene loginScene(Experiment experiment, ISceneSwitcher switcher) {
         final GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
@@ -63,7 +64,7 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene rateGameScene(String gameName, ExperimentHistory experiment, ISceneSwitcher switcher) {
+    public static Scene rateGameScene(String gameName, Experiment experiment, ISceneSwitcher switcher) {
         final GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
@@ -102,7 +103,7 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene gameScene(String gameName, ExperimentHistory experiment, ISceneSwitcher switcher)
+    public static Scene gameScene(String gameName, Experiment experiment, ISceneSwitcher switcher)
             throws IOException {
         final GameRoundScene gscene = new GameRoundScene(gameName, experiment, switcher);
         return gscene.getScene();

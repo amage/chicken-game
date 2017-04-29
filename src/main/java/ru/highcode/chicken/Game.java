@@ -8,13 +8,14 @@ import java.util.Map;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ru.highcode.chicken.data.Experiment;
 
 public class Game extends Application implements ISceneSwitcher {
     private final List<Scene> scenario = new ArrayList<>();
     private Stage primaryStage;
     private int currentScene = 0;
     final Map<String, String> texts = GameData.load().getTexts();
-    private ExperimentHistory experiment = new ExperimentHistory();
+    private Experiment experiment = new Experiment();
 
     public Game() throws IOException {
     }
@@ -51,7 +52,7 @@ public class Game extends Application implements ISceneSwitcher {
         currentScene = currentScene + 1;
         if (currentScene == scenario.size()) {
             currentScene = 0;
-            experiment = new ExperimentHistory();
+            experiment = new Experiment();
         }
         final Scene scene = scenario.get(currentScene);
         primaryStage.hide();

@@ -6,6 +6,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import ru.highcode.chicken.data.Round;
+import ru.highcode.chicken.data.StepHistory;
 
 public class CarWay extends Pane {
     // TODO: history
@@ -23,9 +25,11 @@ public class CarWay extends Pane {
     private boolean run = false;
     private Boolean win;
     private final Properties settings;
+    private final Round round;
 
-    public CarWay(Properties settings) {
+    public CarWay(Properties settings, Round round) {
         this.settings = settings;
+        this.round = round;
         velocity = calculateCarSpeed();
         getChildren().add(canvas);
         setMinHeight(CAR_HEIGHT);
@@ -57,10 +61,15 @@ public class CarWay extends Pane {
         startNanoTime = System.nanoTime();
         startPos = getCarPos();
         run = true;
+        round.addStep(new StepHistory(startNanoTime));
     }
 
     public void stopEngine() {
+        if (run == false) {
+            return;
+        }
         run = false;
+        round.getLastStep().setStopTime(System.nanoTime());
     }
 
     public void setCarPos(double carPos) {
