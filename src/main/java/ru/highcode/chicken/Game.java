@@ -34,9 +34,9 @@ public class Game extends Application implements ISceneSwitcher {
         // TODO: addScene(SceneFactory.loginScene(experiment, this));
         // TODO: intro texts
         // addScene(SceneFactory.textScene(texts.get("1"), this));
-        // addScene(SceneFactory.gameScene("1", experiment, this));
-        addScene(SceneFactory.rateGameScene("1", experiment, this));
-        addScene(SceneFactory.textScene(texts.get("1"), this));
+        addScene(SceneFactory.gameScene("1", experiment, this));
+        // addScene(SceneFactory.rateGameScene("1", experiment, this));
+        // addScene(SceneFactory.textScene(texts.get("1"), this));
 
         primaryStage.setScene(scenario.get(currentScene));
         primaryStage.show();

@@ -66,9 +66,8 @@ public class GameRoundScene {
         final ImageView trafficLight = new ImageView(TrafficLightState.GREEN.getImage());
         pane.getChildren().add(trafficLight);
 
-        final double carSpeed = Double.parseDouble(settings.getProperty("car.speed"));
-        // TODO auto calculation best fit speed.
-        final CarWay carWay = new CarWay(carSpeed);
+
+        final CarWay carWay = new CarWay(settings);
         carWay.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.DASHED, null, null)));
 
         pane.getChildren().add(carWay);

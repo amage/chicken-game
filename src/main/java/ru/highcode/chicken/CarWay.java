@@ -1,5 +1,7 @@
 package ru.highcode.chicken;
 
+import java.util.Properties;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -13,19 +15,31 @@ public class CarWay extends Pane {
     private static final double CAR_WIDTH = car.getWidth();
     private final Canvas canvas = new Canvas();
     private double carPos = 0;
-    private final double velocity;
+    private double velocity;
     private long startNanoTime;
     private long roundStartNanoTime;
     private double startPos;
 
     private boolean run = false;
     private Boolean win;
+    private final Properties settings;
 
-    public CarWay(double velocity) {
-        this.velocity = velocity;
+    public CarWay(Properties settings) {
+        this.settings = settings;
+        velocity = calculateCarSpeed();
         getChildren().add(canvas);
         setMinHeight(CAR_HEIGHT);
         setCarPos(-CAR_WIDTH / 2);
+    }
+
+    private double calculateCarSpeed() {
+        final String speedProperty = settings.getProperty("car.speed");
+        if (!speedProperty.endsWith("s")) {
+            return Double.parseDouble(speedProperty);
+        }
+
+        final double screenTime = Double.parseDouble(speedProperty.substring(0, speedProperty.length() - 1));
+        return canvas.getWidth() / screenTime;
     }
 
     public double getCarPos() {
@@ -71,6 +85,7 @@ public class CarWay extends Pane {
             canvas.setHeight(CAR_HEIGHT);
             setMinWidth(w);
             canvas.getGraphicsContext2D().drawImage(car, carPos, 0);
+            velocity = calculateCarSpeed();
         }
     }
 
