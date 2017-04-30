@@ -17,6 +17,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.converter.NumberStringConverter;
 import ru.highcode.chicken.data.Experiment;
+import ru.highcode.chicken.data.Round;
 
 public class SceneFactory {
 
@@ -125,6 +126,19 @@ public class SceneFactory {
             switcher.nextScene();
         });
         pane.getChildren().add(nextBtn);
+        return new Scene(pane);
+    }
+
+    public static Scene gameRoundResult(String gameName, Experiment experiment, ISceneSwitcher switcher) {
+        VBox pane = new VBox();
+        pane.setAlignment(Pos.CENTER);
+        pane.setSpacing(20);
+        Round round = experiment.getRound(gameName);
+        if (round.isWin()) {
+            Text scoreCount = new Text(String.format("Ваш счет за раунд: %d", round.getTotalScore()));
+            scoreCount.setFont(new Font(42));
+            pane.getChildren().add(scoreCount);
+        }
         return new Scene(pane);
     }
 

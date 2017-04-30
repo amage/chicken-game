@@ -8,6 +8,7 @@ public class Round {
     private final String name;
     private boolean practics = false;
     private final LinkedList<StepHistory> steps = new LinkedList<>();
+    private Boolean win = null;
 
     public Round(String name) {
         this.name = name;
@@ -45,5 +46,13 @@ public class Round {
 
     public StepHistory getLastStep() {
         return steps.getLast();
+    }
+
+    public void setWin(boolean win) {
+        this.win = win;
+    }
+    
+    public boolean isWin() {
+        return win;
     }
 }
