@@ -33,9 +33,8 @@ public class Game extends Application implements ISceneSwitcher {
         // primaryStage.setFullScreen(true);
         primaryStage.setMaximized(true);
 
-        // Login scene
-        // TODO: addScene(SceneFactory.loginScene(experiment, this));
-        // texts
+        addScene(SceneFactory.loginScene(experiment, this));
+
         addScene(SceneFactory.textScene(texts.get("1"), this));
         addScene(SceneFactory.textScene(texts.get("2"), this));
 
@@ -50,7 +49,8 @@ public class Game extends Application implements ISceneSwitcher {
             addScene(SceneFactory.gameScene(String.valueOf(i), experiment, this));
             addScene(SceneFactory.rateGameScene(String.valueOf(i), experiment, this));
         }
-        addScene(SceneFactory.textScene(texts.get("4"), this));
+        addScene(SceneFactory.totalScoreScene(experiment, this));
+        addScene(SceneFactory.textScene(texts.get("5"), "Завершить", this));
 
         primaryStage.setScene(scenario.get(currentScene));
         primaryStage.show();

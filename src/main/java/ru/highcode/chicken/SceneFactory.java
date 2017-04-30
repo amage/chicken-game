@@ -12,21 +12,28 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.converter.NumberStringConverter;
 import ru.highcode.chicken.data.Experiment;
 
 public class SceneFactory {
+
     public static Scene textScene(String text, ISceneSwitcher switcher) {
+        return textScene(text, "Продолжить", switcher);
+    }
+
+    public static Scene textScene(String text, String btnText, ISceneSwitcher switcher) {
         final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         final Text t = new Text(text);
+        t.setFont(new Font(24));
         t.setWrappingWidth(800);
         t.setTextAlignment(TextAlignment.JUSTIFY);
         pane.setSpacing(50);
         pane.getChildren().add(t);
-        final Button nextButton = new Button("Продолжить");
+        final Button nextButton = new Button(btnText);
         pane.getChildren().add(nextButton);
         nextButton.setOnAction(e -> {
             switcher.nextScene();
@@ -103,8 +110,25 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene gameScene(String gameName, Experiment experiment, ISceneSwitcher switcher)
-            throws IOException {
+    public static Scene totalScoreScene(Experiment experiment, ISceneSwitcher switcher) {
+        final VBox pane = new VBox();
+        pane.setAlignment(Pos.CENTER);
+        pane.setSpacing(20);
+        final Text scoreLabel = new Text("Вы заработали: ");
+        scoreLabel.setFont(new Font(21));
+        pane.getChildren().add(scoreLabel);
+        final Text scoreText = new Text(String.format("%d баллов", experiment.getTotalScore()));
+        scoreText.setFont(new Font(42));
+        pane.getChildren().add(scoreText);
+        final Button nextBtn = new Button("Продолжить");
+        nextBtn.setOnAction(e -> {
+            switcher.nextScene();
+        });
+        pane.getChildren().add(nextBtn);
+        return new Scene(pane);
+    }
+
+    public static Scene gameScene(String gameName, Experiment experiment, ISceneSwitcher switcher) throws IOException {
         final GameRoundScene gscene = new GameRoundScene(gameName, experiment, switcher);
         return gscene.getScene();
     }
