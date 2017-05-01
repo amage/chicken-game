@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import ru.highcode.chicken.data.Round;
 import ru.highcode.chicken.data.StepHistory;
 
@@ -73,10 +74,8 @@ public class CarWay extends Pane {
     }
 
     public void setCarPos(double carPos) {
-        final GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(this.carPos, 0, CAR_WIDTH, CAR_HEIGHT);
         this.carPos = carPos;
-        gc.drawImage(car, carPos, 0);
+        paint(canvas.getGraphicsContext2D());
     }
 
     @Override
@@ -93,9 +92,15 @@ public class CarWay extends Pane {
             canvas.setWidth(w);
             canvas.setHeight(CAR_HEIGHT);
             setMinWidth(w);
-            canvas.getGraphicsContext2D().drawImage(car, carPos, 0);
+            paint(canvas.getGraphicsContext2D());
             velocity = calculateCarSpeed();
         }
+    }
+
+    private void paint(GraphicsContext gc) {
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.drawImage(car, carPos, 0);
+        gc.setFill(Color.GREEN);
     }
 
     public void update(long currentNanoTime) {

@@ -3,34 +3,35 @@ package ru.highcode.chicken;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.Properties;
 
 import javafx.animation.AnimationTimer;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import ru.highcode.chicken.data.Experiment;
 import ru.highcode.chicken.data.Round;
 
 public class GameRoundScene {
     // TODO clean layout
-    // TODO tune and restrict car speed and max round time
     // TODO refactor logic
     // TODO log writer
     private final Scene scene;
     private final double roundTime;
     private final Properties settings = new Properties();
     private final Round round;
+    private final Image winImage = new Image("file:win.png");
+    private final Image failImage = new Image("file:fail.png");
+
+    private long switchSceneDelay;
     /**
      * @param experiment
      * @param roundTime
@@ -40,41 +41,58 @@ public class GameRoundScene {
      */
     public GameRoundScene(String gameName, Experiment experiment, ISceneSwitcher switcher)
             throws FileNotFoundException, IOException {
+        Font bigFont = new Font(32);
+        
         settings.load(new FileReader("game.cfg"));
         this.round = experiment.getRound(gameName);
         this.roundTime = Long.parseLong(settings.getProperty(gameName + ".roundTime"));
-        final VBox pane = new VBox();
 
-        pane.setAlignment(Pos.CENTER);
+        BorderPane pane = new BorderPane();
+
         final GridPane scorePane = new GridPane();
 
-        final Text roundTimeText = new Text("0");
         final Text currentScoreText = new Text("0");
+        currentScoreText.setFont(bigFont);
         final Text totalScoreText = new Text("0");
+        totalScoreText.setFont(bigFont);
+
+        // TODO replace with timer
         final Button nextButton = new Button("Продолжить");
         nextButton.setOnAction(e -> {
             switcher.nextScene();
         });
         nextButton.setVisible(false);
 
-        scorePane.add(new Text("Total Bank Account: "), 0, 0);
-        scorePane.add(totalScoreText, 1, 0);
-        scorePane.add(new Text("Total Points Earned: "), 0, 1);
+//        if (!round.isPractics()) {
+            Text totalScoreLabel = new Text("Очки за всю игру: ");
+            totalScoreLabel.setFont(bigFont);
+            scorePane.add(totalScoreLabel, 0, 0);
+            scorePane.add(totalScoreText, 1, 0);
+//        }
+        Text roundScoreLabel = new Text("Очки за раунд: ");
+        roundScoreLabel.setFont(bigFont);
+        scorePane.add(roundScoreLabel, 0, 1);
         scorePane.add(currentScoreText, 1, 1);
-        scorePane.add(new Text("Time: "), 0, 2);
-        scorePane.add(roundTimeText, 1, 2);
+        scorePane.setPadding(new Insets(20));
 
-        pane.getChildren().add(scorePane);
+        pane.setTop(scorePane);
+
+        VBox wrapper = new VBox();
         final ImageView trafficLight = new ImageView(TrafficLightState.GREEN.getImage());
-        pane.getChildren().add(trafficLight);
-
+        wrapper.getChildren().add(trafficLight);
+        wrapper.setPadding(new Insets(0, 100, 0, 0));
+        pane.setRight(wrapper);
 
         final CarWay carWay = new CarWay(settings, round);
-        carWay.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.DASHED, null, null)));
+//        carWay.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.DASHED, null, null)));
+        carWay.setPadding(new Insets(0,0,200,0));
+        VBox bottom = new VBox();
+        bottom.getChildren().add(carWay);
+        bottom.getChildren().add(nextButton);
+        pane.setBottom(bottom);
 
-        pane.getChildren().add(carWay);
-        pane.getChildren().add(nextButton);
-
+        ImageView resultImage = new ImageView();
+        pane.setCenter(resultImage);
         final AnimationTimer at = new AnimationTimer() {
             @Override
             public void handle(long currentNanoTime) {
@@ -87,21 +105,30 @@ public class GameRoundScene {
 
                     currentScoreText.setText(String.valueOf(round.getTotalScore()));
                     totalScoreText.setText(String.valueOf(experiment.getTotalScore()));
-                    ;
-                    roundTimeText.setText(new DecimalFormat("#.#").format(time));
                 }
                 if (isRoundEnded(carWay, currentNanoTime)) {
                     if (trafficLight.getImage() != TrafficLightState.RED.getImage()) {
                         trafficLight.setImage(TrafficLightState.RED.getImage());
                     }
                     carWay.stop();
-                    this.stop();
                     nextButton.setVisible(true);
                     nextButton.setFocusTraversable(false);
+
                     if (carWay.isWin()) {
-                        roundTimeText.setText("WIN!!!");
+                        resultImage.setImage(winImage);
+//                        roundTimeText.setText("WIN!!!");
                     } else {
-                        roundTimeText.setText("LOOSE!!!");
+                        resultImage.setImage(failImage);
+//                        roundTimeText.setText("LOOSE!!!");
+                    }
+                    if(switchSceneDelay == 0) {
+                        switchSceneDelay = System.nanoTime();
+                    } else {
+                        // 3 sec
+                        if((System.nanoTime() - switchSceneDelay) >   3 * 1000000000l) {
+                            this.stop();  
+                            switcher.nextScene();
+                        }
                     }
                 }
             }
@@ -120,7 +147,6 @@ public class GameRoundScene {
                 carWay.stopEngine();
             }
         });
-
     }
 
     private boolean isRoundStarted(final CarWay carWay, long currentNanoTime) {

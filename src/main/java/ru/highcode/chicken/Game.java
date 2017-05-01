@@ -51,8 +51,8 @@ public class Game extends Application implements ISceneSwitcher {
 //        }
 //        addScene(SceneFactory.totalScoreScene(experiment, this));
 //        addScene(SceneFactory.textScene(texts.get("5"), "Завершить", this));
-        experiment.getRound("1").setWin(false);
-        addScene(SceneFactory.gameRoundResult("1", experiment, this));
+//        experiment.getRound("1").setWin(false);
+//        addScene(SceneFactory.gameRoundResult("1", experiment, this));
         primaryStage.setScene(scenario.get(currentScene));
         primaryStage.show();
     }
