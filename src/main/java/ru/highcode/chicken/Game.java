@@ -42,7 +42,7 @@ public class Game extends Application implements ISceneSwitcher {
 //
 //        addScene(SceneFactory.textScene(texts.get("3"), this));
 //
-//        addScene(SceneFactory.gameScene(PRACTICS_NAME_2, experiment, this));
+        addScene(SceneFactory.gameScene(PRACTICS_NAME_2, experiment, this));
 //
 //        addScene(SceneFactory.textScene(texts.get("4"), this));
 //        for (int i = 1; i <= 15; i++) {
@@ -51,7 +51,7 @@ public class Game extends Application implements ISceneSwitcher {
 //        }
 //        addScene(SceneFactory.totalScoreScene(experiment, this));
 //        addScene(SceneFactory.textScene(texts.get("5"), "Завершить", this));
-        experiment.getRound("1").setWin(true);
+        experiment.getRound("1").setWin(false);
         addScene(SceneFactory.gameRoundResult("1", experiment, this));
         primaryStage.setScene(scenario.get(currentScene));
         primaryStage.show();

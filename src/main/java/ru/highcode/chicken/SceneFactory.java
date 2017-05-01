@@ -118,7 +118,7 @@ public class SceneFactory {
         final Text scoreLabel = new Text("Вы заработали: ");
         scoreLabel.setFont(new Font(21));
         pane.getChildren().add(scoreLabel);
-        final Text scoreText = new Text(String.format("%d баллов", experiment.getTotalScore()));
+        final Text scoreText = new Text(String.format("%d очков", experiment.getTotalScore()));
         scoreText.setFont(new Font(42));
         pane.getChildren().add(scoreText);
         final Button nextBtn = new Button("Продолжить");
@@ -134,11 +134,21 @@ public class SceneFactory {
         pane.setAlignment(Pos.CENTER);
         pane.setSpacing(20);
         Round round = experiment.getRound(gameName);
+        Text message = new Text();
         if (round.isWin()) {
-            Text scoreCount = new Text(String.format("Ваш счет за раунд: %d", round.getTotalScore()));
-            scoreCount.setFont(new Font(42));
-            pane.getChildren().add(scoreCount);
+            message.setText(String.format("Ваш счет за раунд: %d", round.getTotalScore()));
+        } else {
+            message.setText(String.format("Вы попали в аварию и разбились.\n"+
+                            "Вы теряете очки за этот раунд.\n" +
+                            "У вас %d очков", experiment.getTotalScore()));
         }
+        message.setFont(new Font(42));
+        pane.getChildren().add(message);
+        final Button nextBtn = new Button("Продолжить");
+        nextBtn.setOnAction(e -> {
+            switcher.nextScene();
+        });
+        pane.getChildren().add(nextBtn);
         return new Scene(pane);
     }
 
