@@ -40,7 +40,7 @@ public class GameRoundScene {
      * @throws IOException
      * @throws FileNotFoundException
      */
-    public GameRoundScene(String gameName, Experiment experiment, ISceneSwitcher switcher)
+    public GameRoundScene(String gameName, Experiment experiment, IGame switcher)
             throws FileNotFoundException, IOException {
         settings.load(new FileReader("game.cfg"));
         this.round = experiment.getRound(gameName);

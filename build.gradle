@@ -18,6 +18,8 @@ repositories {
 }
 
 dependencies {
+    compile 'com.opencsv:opencsv:3.9'
+
     /* Test */
     testCompile 'junit:junit:4.8.2'
 }

@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ru.highcode.chicken.data.Experiment;
 
-public class Game extends Application implements ISceneSwitcher {
+public class Game extends Application implements IGame {
     public static final String PRACTICS_NAME_1 = "practics1";
     public static final String PRACTICS_NAME_2 = "practics2";
     private final List<Scene> scenario = new ArrayList<>();
@@ -33,26 +33,26 @@ public class Game extends Application implements ISceneSwitcher {
         // primaryStage.setFullScreen(true);
         primaryStage.setMaximized(true);
 
-//        addScene(SceneFactory.loginScene(experiment, this));
-//
-//        addScene(SceneFactory.textScene(texts.get("1"), this));
-//        addScene(SceneFactory.textScene(texts.get("2"), this));
-//
-//        addScene(SceneFactory.gameScene(PRACTICS_NAME_1, experiment, this));
-//
-//        addScene(SceneFactory.textScene(texts.get("3"), this));
-//
-        addScene(SceneFactory.gameScene(PRACTICS_NAME_2, experiment, this));
-//
-//        addScene(SceneFactory.textScene(texts.get("4"), this));
-//        for (int i = 1; i <= 15; i++) {
-//            addScene(SceneFactory.gameScene(String.valueOf(i), experiment, this));
-//            addScene(SceneFactory.rateGameScene(String.valueOf(i), experiment, this));
-//        }
-//        addScene(SceneFactory.totalScoreScene(experiment, this));
-//        addScene(SceneFactory.textScene(texts.get("5"), "Завершить", this));
-//        experiment.getRound("1").setWin(false);
-//        addScene(SceneFactory.gameRoundResult("1", experiment, this));
+        addScene(SceneFactory.loginScene(this));
+        //
+        //        addScene(SceneFactory.textScene(texts.get("1"), this));
+        //        addScene(SceneFactory.textScene(texts.get("2"), this));
+        //
+        //        addScene(SceneFactory.gameScene(PRACTICS_NAME_1, experiment, this));
+        //
+        //        addScene(SceneFactory.textScene(texts.get("3"), this));
+        //
+        // addScene(SceneFactory.gameScene(PRACTICS_NAME_2, experiment, this));
+        //
+        //        addScene(SceneFactory.textScene(texts.get("4"), this));
+        //        for (int i = 1; i <= 15; i++) {
+        //            addScene(SceneFactory.gameScene(String.valueOf(i), experiment, this));
+        //            addScene(SceneFactory.rateGameScene(String.valueOf(i), experiment, this));
+        //        }
+        //        addScene(SceneFactory.totalScoreScene(experiment, this));
+        //        addScene(SceneFactory.textScene(texts.get("5"), "Завершить", this));
+        //        experiment.getRound("1").setWin(false);
+        //        addScene(SceneFactory.gameRoundResult("1", experiment, this));
         primaryStage.setScene(scenario.get(currentScene));
         primaryStage.show();
     }
@@ -66,12 +66,18 @@ public class Game extends Application implements ISceneSwitcher {
         currentScene = currentScene + 1;
         if (currentScene == scenario.size()) {
             currentScene = 0;
+            experiment.save("data.csv");
             experiment = new Experiment();
         }
         final Scene scene = scenario.get(currentScene);
         primaryStage.hide();
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    @Override
+    public Experiment getExperiment() {
+        return experiment;
     }
 
 }

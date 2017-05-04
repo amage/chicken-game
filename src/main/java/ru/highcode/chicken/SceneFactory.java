@@ -21,11 +21,11 @@ import ru.highcode.chicken.data.Round;
 
 public class SceneFactory {
 
-    public static Scene textScene(String text, ISceneSwitcher switcher) {
+    public static Scene textScene(String text, IGame switcher) {
         return textScene(text, "Продолжить", switcher);
     }
 
-    public static Scene textScene(String text, String btnText, ISceneSwitcher switcher) {
+    public static Scene textScene(String text, String btnText, IGame switcher) {
         final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         final Text t = new Text(text);
@@ -42,7 +42,7 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene loginScene(Experiment experiment, ISceneSwitcher switcher) {
+    public static Scene loginScene(IGame game) {
         final GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
@@ -51,7 +51,8 @@ public class SceneFactory {
         pane.add(new Label("Номер"), 0, 1);
 
         final TextField playerNumber = new TextField();
-        playerNumber.textProperty().bindBidirectional(experiment.playerNumberProperty(), new NumberStringConverter());
+        playerNumber.textProperty().bindBidirectional(game.getExperiment().playerNumberProperty(),
+                new NumberStringConverter());
         playerNumber.setTextFormatter(new TextFormatter<>(c -> {
             try {
                 Long.parseLong(c.getControlNewText());
@@ -64,15 +65,16 @@ public class SceneFactory {
         final HBox bbox = new HBox();
         final Button button = new Button("Старт");
         button.setOnAction(e -> {
-            switcher.nextScene();
+            game.nextScene();
         });
         bbox.getChildren().add(button);
         bbox.setAlignment(Pos.BOTTOM_RIGHT);
         pane.add(bbox, 0, 2, 2, 1);
-        return new Scene(pane);
+        final Scene result = new Scene(pane);
+        return result;
     }
 
-    public static Scene rateGameScene(String gameName, Experiment experiment, ISceneSwitcher switcher) {
+    public static Scene rateGameScene(String gameName, Experiment experiment, IGame switcher) {
         final GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
@@ -111,7 +113,7 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene totalScoreScene(Experiment experiment, ISceneSwitcher switcher) {
+    public static Scene totalScoreScene(Experiment experiment, IGame switcher) {
         final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         pane.setSpacing(20);
@@ -129,18 +131,18 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene gameRoundResult(String gameName, Experiment experiment, ISceneSwitcher switcher) {
-        VBox pane = new VBox();
+    public static Scene gameRoundResult(String gameName, Experiment experiment, IGame switcher) {
+        final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         pane.setSpacing(20);
-        Round round = experiment.getRound(gameName);
-        Text message = new Text();
+        final Round round = experiment.getRound(gameName);
+        final Text message = new Text();
         if (round.isWin()) {
             message.setText(String.format("Ваш счет за раунд: %d", round.getTotalScore()));
         } else {
-            message.setText(String.format("Вы попали в аварию и разбились.\n"+
-                            "Вы теряете очки за этот раунд.\n" +
-                            "У вас %d очков", experiment.getTotalScore()));
+            message.setText(String.format(
+                    "Вы попали в аварию и разбились.\n" + "Вы теряете очки за этот раунд.\n" + "У вас %d очков",
+                    experiment.getTotalScore()));
         }
         message.setFont(new Font(42));
         pane.getChildren().add(message);
@@ -152,7 +154,7 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene gameScene(String gameName, Experiment experiment, ISceneSwitcher switcher) throws IOException {
+    public static Scene gameScene(String gameName, Experiment experiment, IGame switcher) throws IOException {
         final GameRoundScene gscene = new GameRoundScene(gameName, experiment, switcher);
         return gscene.getScene();
     }
