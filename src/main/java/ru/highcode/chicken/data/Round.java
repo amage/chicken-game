@@ -9,6 +9,7 @@ public class Round {
     private boolean practics = false;
     private final LinkedList<StepHistory> steps = new LinkedList<>();
     private Boolean win = null;
+    private int risk;
 
     public Round(String name) {
         this.name = name;
@@ -48,11 +49,23 @@ public class Round {
         return steps.getLast();
     }
 
+    public int getStepsCount() {
+        return steps.size();
+    }
+
     public void setWin(boolean win) {
         this.win = win;
     }
-    
+
     public boolean isWin() {
         return win;
+    }
+
+    public int getRisk() {
+        return risk;
+    }
+
+    public void setRisk(int risk) {
+        this.risk = risk;
     }
 }

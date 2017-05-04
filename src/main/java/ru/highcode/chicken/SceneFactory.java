@@ -1,7 +1,5 @@
 package ru.highcode.chicken;
 
-import java.io.IOException;
-
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,8 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.util.converter.NumberStringConverter;
-import ru.highcode.chicken.data.Experiment;
 import ru.highcode.chicken.data.Round;
 
 public class SceneFactory {
@@ -51,9 +47,10 @@ public class SceneFactory {
         pane.add(new Label("Номер"), 0, 1);
 
         final TextField playerNumber = new TextField();
-        playerNumber.textProperty().bindBidirectional(game.getExperiment().playerNumberProperty(),
-                new NumberStringConverter());
         playerNumber.setTextFormatter(new TextFormatter<>(c -> {
+            if (c.getControlNewText().isEmpty()) {
+                return c;
+            }
             try {
                 Long.parseLong(c.getControlNewText());
             } catch (final Exception e) {
@@ -64,7 +61,10 @@ public class SceneFactory {
         pane.add(playerNumber, 1, 1);
         final HBox bbox = new HBox();
         final Button button = new Button("Старт");
+        button.disableProperty().bind(Bindings.isEmpty(playerNumber.textProperty()));
         button.setOnAction(e -> {
+            game.getExperiment().setPlayerNumber(Long.parseLong(playerNumber.getText()));
+            playerNumber.textProperty().set("");
             game.nextScene();
         });
         bbox.getChildren().add(button);
@@ -74,7 +74,7 @@ public class SceneFactory {
         return result;
     }
 
-    public static Scene rateGameScene(String gameName, Experiment experiment, IGame switcher) {
+    public static Scene rateGameScene(String gameName, IGame game) {
         final GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
@@ -84,8 +84,6 @@ public class SceneFactory {
         pane.add(new Label(RISK_VALUATION_TEXT), 0, 0, 2, 1);
         pane.add(new Label("Оценка"), 0, 1);
         final TextField playerGameRate = new TextField("");
-        // playerNumber.textProperty().bindBidirectional(experiment.playerNumberProperty(),
-        // new NumberStringConverter());
         playerGameRate.setTextFormatter(new TextFormatter<>(c -> {
             if (c.getControlNewText().isEmpty()) {
                 return c;
@@ -105,7 +103,8 @@ public class SceneFactory {
         final Button button = new Button("Оценить");
         button.disableProperty().bind(Bindings.isEmpty(playerGameRate.textProperty()));
         button.setOnAction(e -> {
-            switcher.nextScene();
+            game.getExperiment().getRound(gameName).setRisk(Integer.parseInt(playerGameRate.textProperty().get()));
+            game.nextScene();
         });
         bbox.getChildren().add(button);
         bbox.setAlignment(Pos.BOTTOM_RIGHT);
@@ -113,49 +112,56 @@ public class SceneFactory {
         return new Scene(pane);
     }
 
-    public static Scene totalScoreScene(Experiment experiment, IGame switcher) {
+    public static Scene totalScoreScene(IGame game) {
         final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         pane.setSpacing(20);
         final Text scoreLabel = new Text("Вы заработали: ");
         scoreLabel.setFont(new Font(21));
         pane.getChildren().add(scoreLabel);
-        final Text scoreText = new Text(String.format("%d очков", experiment.getTotalScore()));
-        scoreText.setFont(new Font(42));
-        pane.getChildren().add(scoreText);
+        // FIXME on render
+        // final Text scoreText = new Text(String.format("%d очков",
+        // game.getExperiment().getTotalScore()));
+        // scoreText.setFont(new Font(42));
+        // pane.getChildren().add(scoreText);
         final Button nextBtn = new Button("Продолжить");
         nextBtn.setOnAction(e -> {
-            switcher.nextScene();
+            game.nextScene();
         });
         pane.getChildren().add(nextBtn);
         return new Scene(pane);
     }
 
-    public static Scene gameRoundResult(String gameName, Experiment experiment, IGame switcher) {
+    public static Scene gameRoundResult(String gameName, IGame game) {
         final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         pane.setSpacing(20);
-        final Round round = experiment.getRound(gameName);
+        final Round round = game.getExperiment().getRound(gameName);
         final Text message = new Text();
-        if (round.isWin()) {
-            message.setText(String.format("Ваш счет за раунд: %d", round.getTotalScore()));
-        } else {
-            message.setText(String.format(
-                    "Вы попали в аварию и разбились.\n" + "Вы теряете очки за этот раунд.\n" + "У вас %d очков",
-                    experiment.getTotalScore()));
-        }
+
+        // FIXME on render
+        // if (round.isWin()) {
+        // message.setText(String.format("Ваш счет за раунд: %d",
+        // round.getTotalScore()));
+        // } else {
+        // message.setText(String.format(
+        // "Вы попали в аварию и разбились.\n" + "Вы теряете очки за этот
+        // раунд.\n" + "У вас %d очков",
+        // game.getExperiment().getTotalScore()));
+        // }
+
         message.setFont(new Font(42));
         pane.getChildren().add(message);
         final Button nextBtn = new Button("Продолжить");
         nextBtn.setOnAction(e -> {
-            switcher.nextScene();
+            game.nextScene();
         });
         pane.getChildren().add(nextBtn);
         return new Scene(pane);
     }
 
-    public static Scene gameScene(String gameName, Experiment experiment, IGame switcher) throws IOException {
-        final GameRoundScene gscene = new GameRoundScene(gameName, experiment, switcher);
+    public static Scene gameScene(String gameName, IGame switcher) {
+        final GameRoundScene gscene = new GameRoundScene(gameName, switcher);
         return gscene.getScene();
     }
 }

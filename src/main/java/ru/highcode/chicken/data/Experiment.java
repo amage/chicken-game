@@ -2,6 +2,8 @@ package ru.highcode.chicken.data;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,15 +53,38 @@ public class Experiment {
     }
 
     public void save(String fileName) {
-        final CSVResultLine line = new CSVResultLine();
-        line.setPid(String.valueOf(getPlayerNumber()));
+        final CSVResultLine line = prepareCSV();
 
         try (final FileWriter fileWriter = new FileWriter(fileName, true)) {
+            @SuppressWarnings("unchecked")
             final StatefulBeanToCsv<CSVResultLine> csvBind = new StatefulBeanToCsvBuilder<CSVResultLine>(fileWriter)
-                    .build();
+            .build();
             csvBind.write(line);
         } catch (final IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
             e.printStackTrace();
         }
+    }
+
+    private CSVResultLine prepareCSV() {
+        final CSVResultLine line = new CSVResultLine();
+        line.setPid(String.valueOf(getPlayerNumber()));
+        for (int i = 1; i <= 15; i++) {
+            final Round round = getRound(String.valueOf(i));
+            try {
+                final Method mScore = CSVResultLine.class.getMethod("setScore" + i, String.class);
+                final Method mStarts = CSVResultLine.class.getMethod("setStarts" + i, String.class);
+                final Method mRed = CSVResultLine.class.getMethod("setRed" + i, String.class);
+                final Method mRisk = CSVResultLine.class.getMethod("setRisk" + i, String.class);
+
+                mScore.invoke(line, String.valueOf(round.getTotalScore()));
+                mStarts.invoke(line, String.valueOf(round.getLastStep()));
+                mRed.invoke(line, round.isWin() ? "0" : "1");
+                mRisk.invoke(line, String.valueOf(round.getRisk()));
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        return line;
     }
 }

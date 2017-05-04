@@ -28,33 +28,35 @@ public class Game extends Application implements IGame {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        // FIXME: it's good idea to recreate all scenes every game;
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Chicken Game");
         // primaryStage.setFullScreen(true);
         primaryStage.setMaximized(true);
 
-        addScene(SceneFactory.loginScene(this));
-        //
-        //        addScene(SceneFactory.textScene(texts.get("1"), this));
-        //        addScene(SceneFactory.textScene(texts.get("2"), this));
-        //
-        //        addScene(SceneFactory.gameScene(PRACTICS_NAME_1, experiment, this));
-        //
-        //        addScene(SceneFactory.textScene(texts.get("3"), this));
-        //
-        // addScene(SceneFactory.gameScene(PRACTICS_NAME_2, experiment, this));
-        //
-        //        addScene(SceneFactory.textScene(texts.get("4"), this));
-        //        for (int i = 1; i <= 15; i++) {
-        //            addScene(SceneFactory.gameScene(String.valueOf(i), experiment, this));
-        //            addScene(SceneFactory.rateGameScene(String.valueOf(i), experiment, this));
-        //        }
-        //        addScene(SceneFactory.totalScoreScene(experiment, this));
-        //        addScene(SceneFactory.textScene(texts.get("5"), "Завершить", this));
-        //        experiment.getRound("1").setWin(false);
-        //        addScene(SceneFactory.gameRoundResult("1", experiment, this));
+        recreateScenario();
+
         primaryStage.setScene(scenario.get(currentScene));
         primaryStage.show();
+    }
+
+    private void recreateScenario() {
+        scenario.clear();
+        addScene(SceneFactory.loginScene(this));
+        addScene(SceneFactory.textScene(texts.get("1"), this));
+        addScene(SceneFactory.textScene(texts.get("2"), this));
+        addScene(SceneFactory.gameScene(PRACTICS_NAME_1, this));
+        addScene(SceneFactory.textScene(texts.get("3"), this));
+        addScene(SceneFactory.gameScene(PRACTICS_NAME_2, this));
+        addScene(SceneFactory.textScene(texts.get("4"), this));
+        for (int i = 1; i <= 15; i++) {
+            final String gameName = String.valueOf(i);
+            addScene(SceneFactory.gameScene(gameName, this));
+            SceneFactory.gameRoundResult(gameName, this);
+            addScene(SceneFactory.rateGameScene(gameName, this));
+        }
+        addScene(SceneFactory.totalScoreScene(this));
+        addScene(SceneFactory.textScene(texts.get("5"), "Завершить", this));
     }
 
     private void addScene(Scene scene) {
@@ -68,6 +70,7 @@ public class Game extends Application implements IGame {
             currentScene = 0;
             experiment.save("data.csv");
             experiment = new Experiment();
+            recreateScenario();
         }
         final Scene scene = scenario.get(currentScene);
         primaryStage.hide();

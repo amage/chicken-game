@@ -40,9 +40,13 @@ public class GameRoundScene {
      * @throws IOException
      * @throws FileNotFoundException
      */
-    public GameRoundScene(String gameName, Experiment experiment, IGame switcher)
-            throws FileNotFoundException, IOException {
-        settings.load(new FileReader("game.cfg"));
+    public GameRoundScene(String gameName, IGame game) {
+        try {
+            settings.load(new FileReader("game.cfg"));
+        } catch (final IOException e1) {
+            e1.printStackTrace();
+        }
+        final Experiment experiment = game.getExperiment();
         this.round = experiment.getRound(gameName);
         this.roundTime = Long.parseLong(settings.getProperty(gameName + ".roundTime"));
 
@@ -111,7 +115,7 @@ public class GameRoundScene {
                         // 3 sec
                         if(System.nanoTime() - switchSceneDelay >   3 * 1000000000l) {
                             this.stop();
-                            switcher.nextScene();
+                            game.nextScene();
                         }
                     }
                 }
