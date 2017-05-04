@@ -100,7 +100,9 @@ public class CarWay extends Pane {
     private void paint(GraphicsContext gc) {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.drawImage(car, carPos, 0);
-        gc.setFill(Color.GREEN);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(5);
+        gc.strokeLine(0, CAR_HEIGHT, canvas.getWidth(), CAR_HEIGHT);
     }
 
     public void update(long currentNanoTime) {
