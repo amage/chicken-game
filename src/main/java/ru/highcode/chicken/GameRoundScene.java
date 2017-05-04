@@ -20,19 +20,20 @@ import javafx.scene.text.Text;
 import ru.highcode.chicken.data.Experiment;
 import ru.highcode.chicken.data.Round;
 
-public class GameRoundScene {
+public class GameRoundScene implements IChickenScene {
+    private static final long EOG_DELAY = 1;
     // TODO clean layout
     // TODO log writer
     private final static Font BIG_FONT = new Font(26);
-    private final Scene scene;
-    private final double roundTime;
+    private Scene scene;
+    private double roundTime;
     private final Properties settings = new Properties();
-    private final Round round;
-    // private final Image winImage = new Image("file:win.png");
-    // private final Image failImage = new Image("file:fail.png");
+    private Round round;
     private final Image emptyImage = new Image("file:empty.png");
 
     private long switchSceneDelay;
+    private final String gameName;
+    private final IGame game;
     /**
      * @param experiment
      * @param roundTime
@@ -41,6 +42,11 @@ public class GameRoundScene {
      * @throws FileNotFoundException
      */
     public GameRoundScene(String gameName, IGame game) {
+        this.gameName = gameName;
+        this.game = game;
+    }
+
+    private Scene createNewScene() {
         try {
             settings.load(new FileReader("game.cfg"));
         } catch (final IOException e1) {
@@ -56,7 +62,6 @@ public class GameRoundScene {
         dataLinePane.setPadding(new Insets(200, 0, 200, 0));
 
         final ImageView resultImage = new ImageView(emptyImage);
-        resultImage.minHeight(256);
         dataLinePane.setCenter(resultImage);
 
         final VBox wrapper = new VBox();
@@ -77,8 +82,6 @@ public class GameRoundScene {
         totalScoreText.setFont(BIG_FONT);
 
         dataLinePane.setLeft(createScorePane(currentScoreText, totalScoreText));
-
-
         carWay.setPadding(new Insets(0, 0, 200, 0));
         final VBox bottom = new VBox();
         bottom.getChildren().add(carWay);
@@ -104,16 +107,11 @@ public class GameRoundScene {
                     }
                     carWay.stop();
 
-                    // if (carWay.isWin()) {
-                    // resultImage.setImage(winImage);
-                    // } else {
-                    // resultImage.setImage(failImage);
-                    // }
                     if(switchSceneDelay == 0) {
                         switchSceneDelay = System.nanoTime();
                     } else {
                         // 3 sec
-                        if(System.nanoTime() - switchSceneDelay >   3 * 1000000000l) {
+                        if(System.nanoTime() - switchSceneDelay >   EOG_DELAY * 1000000000l) {
                             this.stop();
                             game.nextScene();
                         }
@@ -127,7 +125,7 @@ public class GameRoundScene {
         carWay.setPadding(new Insets(100, 0, 0, 0));
         pane.getChildren().add(carWay);
 
-        scene = new Scene(pane, 800, 600);
+        final Scene scene = new Scene(pane, 800, 600);
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.SPACE) {
                 carWay.startEngine();
@@ -138,6 +136,7 @@ public class GameRoundScene {
                 carWay.stopEngine();
             }
         });
+        return scene;
     }
 
     private GridPane createScorePane(final Text currentScoreText, final Text totalScoreText) {
@@ -179,7 +178,13 @@ public class GameRoundScene {
         return false;
     }
 
+    @Override
     public Scene getScene() {
         return scene;
+    }
+
+    @Override
+    public void activated() {
+        scene = createNewScene();
     }
 }

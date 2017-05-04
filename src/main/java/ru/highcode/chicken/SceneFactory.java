@@ -17,11 +17,11 @@ import ru.highcode.chicken.data.Round;
 
 public class SceneFactory {
 
-    public static Scene textScene(String text, IGame switcher) {
+    public static IChickenScene textScene(String text, IGame switcher) {
         return textScene(text, "Продолжить", switcher);
     }
 
-    public static Scene textScene(String text, String btnText, IGame switcher) {
+    public static IChickenScene textScene(String text, String btnText, IGame switcher) {
         final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         final Text t = new Text(text);
@@ -35,10 +35,10 @@ public class SceneFactory {
         nextButton.setOnAction(e -> {
             switcher.nextScene();
         });
-        return new Scene(pane);
+        return IChickenScene.wrap(new Scene(pane));
     }
 
-    public static Scene loginScene(IGame game) {
+    public static IChickenScene loginScene(IGame game) {
         final GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
@@ -64,17 +64,27 @@ public class SceneFactory {
         button.disableProperty().bind(Bindings.isEmpty(playerNumber.textProperty()));
         button.setOnAction(e -> {
             game.getExperiment().setPlayerNumber(Long.parseLong(playerNumber.getText()));
-            playerNumber.textProperty().set("");
             game.nextScene();
         });
         bbox.getChildren().add(button);
         bbox.setAlignment(Pos.BOTTOM_RIGHT);
         pane.add(bbox, 0, 2, 2, 1);
-        final Scene result = new Scene(pane);
-        return result;
+        return new IChickenScene() {
+            final Scene scene = new Scene(pane);
+
+            @Override
+            public Scene getScene() {
+                return scene;
+            }
+
+            @Override
+            public void activated() {
+                playerNumber.textProperty().set("");
+            }
+        };
     }
 
-    public static Scene rateGameScene(String gameName, IGame game) {
+    public static IChickenScene rateGameScene(String gameName, IGame game) {
         final GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
@@ -109,59 +119,89 @@ public class SceneFactory {
         bbox.getChildren().add(button);
         bbox.setAlignment(Pos.BOTTOM_RIGHT);
         pane.add(bbox, 0, 2, 2, 1);
-        return new Scene(pane);
+        return new IChickenScene() {
+            private final Scene scene = new Scene(pane);
+
+            @Override
+            public Scene getScene() {
+                return scene;
+            }
+
+            @Override
+            public void activated() {
+                playerGameRate.setText("");
+            }
+        };
     }
 
-    public static Scene totalScoreScene(IGame game) {
+    public static IChickenScene totalScoreScene(IGame game) {
         final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         pane.setSpacing(20);
         final Text scoreLabel = new Text("Вы заработали: ");
         scoreLabel.setFont(new Font(21));
         pane.getChildren().add(scoreLabel);
-        // FIXME on render
-        // final Text scoreText = new Text(String.format("%d очков",
-        // game.getExperiment().getTotalScore()));
-        // scoreText.setFont(new Font(42));
-        // pane.getChildren().add(scoreText);
+        final Text scoreText = new Text();
+        scoreText.setFont(new Font(42));
+        pane.getChildren().add(scoreText);
         final Button nextBtn = new Button("Продолжить");
         nextBtn.setOnAction(e -> {
             game.nextScene();
         });
         pane.getChildren().add(nextBtn);
-        return new Scene(pane);
+        return new IChickenScene() {
+            private final Scene scene = new Scene(pane);
+
+            @Override
+            public Scene getScene() {
+                return scene;
+            }
+
+            @Override
+            public void activated() {
+                scoreText.setText(String.format("%d очков", game.getExperiment().getTotalScore()));
+            }
+        };
     }
 
-    public static Scene gameRoundResult(String gameName, IGame game) {
+    public static IChickenScene gameRoundResult(String gameName, IGame game) {
         final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         pane.setSpacing(20);
-        final Round round = game.getExperiment().getRound(gameName);
         final Text message = new Text();
-
-        // FIXME on render
-        // if (round.isWin()) {
-        // message.setText(String.format("Ваш счет за раунд: %d",
-        // round.getTotalScore()));
-        // } else {
-        // message.setText(String.format(
-        // "Вы попали в аварию и разбились.\n" + "Вы теряете очки за этот
-        // раунд.\n" + "У вас %d очков",
-        // game.getExperiment().getTotalScore()));
-        // }
 
         message.setFont(new Font(42));
         pane.getChildren().add(message);
         final Button nextBtn = new Button("Продолжить");
+        nextBtn.setFocusTraversable(false);
         nextBtn.setOnAction(e -> {
             game.nextScene();
         });
         pane.getChildren().add(nextBtn);
-        return new Scene(pane);
+        return new IChickenScene() {
+            private final Scene scene = new Scene(pane);
+
+            @Override
+            public Scene getScene() {
+                return scene;
+            }
+
+            @Override
+            public void activated() {
+                final Round round = game.getExperiment().getRound(gameName);
+                if (round.isWin()) {
+                    message.setText(String.format("Ваш счет за раунд: %d",
+                            round.getTotalScore()));
+                } else {
+                    message.setText(String.format(
+                            "Вы попали в аварию и разбились.\n" + "Вы теряете очки за этот раунд.\n" + "У вас %d очков",
+                            game.getExperiment().getTotalScore()));
+                }
+            }
+        };
     }
 
-    public static Scene gameScene(String gameName, IGame switcher) {
-        final GameRoundScene gscene = new GameRoundScene(gameName, switcher);
-        return gscene.getScene();
+    public static IChickenScene gameScene(String gameName, IGame switcher) {
+        return new GameRoundScene(gameName, switcher);
     }
 }
