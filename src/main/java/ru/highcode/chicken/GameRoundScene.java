@@ -106,7 +106,7 @@ public class GameRoundScene implements IChickenScene {
                         trafficLight.setImage(TrafficLightState.RED.getImage());
                     }
                     carWay.stop();
-
+                    round.setWin(carWay.isWin());
                     if(switchSceneDelay == 0) {
                         switchSceneDelay = System.nanoTime();
                     } else {
@@ -125,7 +125,7 @@ public class GameRoundScene implements IChickenScene {
         carWay.setPadding(new Insets(100, 0, 0, 0));
         pane.getChildren().add(carWay);
 
-        final Scene scene = new Scene(pane, 800, 600);
+        final Scene scene = new Scene(pane);
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.SPACE) {
                 carWay.startEngine();

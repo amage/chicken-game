@@ -77,7 +77,7 @@ public class Experiment {
                 final Method mRisk = CSVResultLine.class.getMethod("setRisk" + i, String.class);
 
                 mScore.invoke(line, String.valueOf(round.getTotalScore()));
-                mStarts.invoke(line, String.valueOf(round.getLastStep()));
+                mStarts.invoke(line, String.valueOf(round.getStepsCount()));
                 mRed.invoke(line, round.isWin() ? "0" : "1");
                 mRisk.invoke(line, String.valueOf(round.getRisk()));
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException

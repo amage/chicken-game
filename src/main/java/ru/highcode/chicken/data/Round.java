@@ -42,6 +42,9 @@ public class Round {
         if (steps.isEmpty()) {
             return 0;
         }
+        if(win!=null && win.equals(Boolean.FALSE)) {
+            return 0;
+        }
         return steps.stream().mapToLong(StepHistory::getScore).sum();
     }
 
