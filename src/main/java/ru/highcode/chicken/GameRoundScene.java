@@ -76,9 +76,9 @@ public class GameRoundScene implements IChickenScene {
         final CarWay carWay = new CarWay(settings, round);
 
 
-        final Text currentScoreText = new Text("0");
+        final Text currentScoreText = new Text(String.valueOf(round.getTotalScore()));
         currentScoreText.setFont(BIG_FONT);
-        final Text totalScoreText = new Text("0");
+        final Text totalScoreText = new Text(String.valueOf(experiment.getTotalScore()));
         totalScoreText.setFont(BIG_FONT);
 
         dataLinePane.setLeft(createScorePane(currentScoreText, totalScoreText));
