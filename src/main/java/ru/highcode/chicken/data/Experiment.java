@@ -44,7 +44,7 @@ public class Experiment {
     public long getTotalScore() {
         long score = 0;
         for (final Round round : rounds.values()) {
-            if (round.isPractics()) {
+            if (round.isPractics() || !round.isWin()) {
                 continue;
             }
             score += round.getTotalScore();

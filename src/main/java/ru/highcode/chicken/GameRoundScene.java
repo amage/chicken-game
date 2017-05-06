@@ -22,8 +22,6 @@ import ru.highcode.chicken.data.Round;
 
 public class GameRoundScene implements IChickenScene {
     private static final long EOG_DELAY = 1;
-    // TODO clean layout
-    // TODO log writer
     private final static Font BIG_FONT = new Font(26);
     private Scene scene;
     private double roundTime;
@@ -34,6 +32,7 @@ public class GameRoundScene implements IChickenScene {
     private long switchSceneDelay;
     private final String gameName;
     private final IGame game;
+
     /**
      * @param experiment
      * @param roundTime
@@ -75,11 +74,11 @@ public class GameRoundScene implements IChickenScene {
 
         final CarWay carWay = new CarWay(settings, round);
 
-
-        final Text currentScoreText = new Text(String.valueOf(round.getTotalScore()));
+        final Text currentScoreText = new Text();
         currentScoreText.setFont(BIG_FONT);
-        final Text totalScoreText = new Text(String.valueOf(experiment.getTotalScore()));
+        final Text totalScoreText = new Text();
         totalScoreText.setFont(BIG_FONT);
+        setScore(experiment, currentScoreText, totalScoreText);
 
         dataLinePane.setLeft(createScorePane(currentScoreText, totalScoreText));
         carWay.setPadding(new Insets(0, 0, 200, 0));
@@ -98,8 +97,7 @@ public class GameRoundScene implements IChickenScene {
                         trafficLight.setImage(TrafficLightState.YELLOW.getImage());
                     }
 
-                    currentScoreText.setText(String.valueOf(round.getTotalScore()));
-                    totalScoreText.setText(String.valueOf(experiment.getTotalScore()));
+                    setScore(experiment, currentScoreText, totalScoreText);
                 }
                 if (isRoundEnded(carWay, currentNanoTime)) {
                     if (trafficLight.getImage() != TrafficLightState.RED.getImage()) {
@@ -107,17 +105,18 @@ public class GameRoundScene implements IChickenScene {
                     }
                     carWay.stop();
                     round.setWin(carWay.isWin());
-                    if(switchSceneDelay == 0) {
+                    if (switchSceneDelay == 0) {
                         switchSceneDelay = System.nanoTime();
                     } else {
                         // 3 sec
-                        if(System.nanoTime() - switchSceneDelay >   EOG_DELAY * 1000000000l) {
+                        if (System.nanoTime() - switchSceneDelay > EOG_DELAY * 1000000000l) {
                             this.stop();
                             game.nextScene();
                         }
                     }
                 }
             }
+
 
         };
         at.start();
@@ -137,6 +136,13 @@ public class GameRoundScene implements IChickenScene {
             }
         });
         return scene;
+    }
+
+    private void setScore(final Experiment experiment, final Text currentScoreText, final Text totalScoreText) {
+        String format = "%,d";
+
+        currentScoreText.setText(String.format(format, round.getTotalScore()).replace(',', ' '));
+        totalScoreText.setText(String.format(format, experiment.getTotalScore() + round.getTotalScore()).replace(',', ' '));
     }
 
     private GridPane createScorePane(final Text currentScoreText, final Text totalScoreText) {
