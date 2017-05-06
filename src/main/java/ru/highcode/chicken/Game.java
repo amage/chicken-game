@@ -27,11 +27,10 @@ public class Game extends Application implements IGame {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // FIXME: it's good idea to recreate all scenes every game;
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Chicken Game");
-        // primaryStage.setFullScreen(true);
-        primaryStage.setMaximized(true);
+         primaryStage.setFullScreen(true);
+        // primaryStage.setMaximized(true);
 
         recreateScenario();
 
