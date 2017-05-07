@@ -31,7 +31,8 @@ public class Game extends Application implements IGame {
         this.primaryStage.setFullScreenExitHint("");
         primaryStage.setTitle("Chicken Game");
         primaryStage.setFullScreen(true);
-        // primaryStage.setMaximized(true);
+        primaryStage.setWidth(1366);
+        primaryStage.setHeight(768);
 
         recreateScenario();
 
@@ -42,23 +43,22 @@ public class Game extends Application implements IGame {
     private void recreateScenario() {
         scenario.clear();
         addScene(SceneFactory.loginScene(this));
-        // addScene(SceneFactory.textScene(texts.get("1"), this));
-        // addScene(SceneFactory.textScene(texts.get("2"), this));
-        // addScene(SceneFactory.gameScene(PRACTICS_NAME_1, this));
-        // addScene(SceneFactory.gameRoundResult(PRACTICS_NAME_1, this));
-        // addScene(SceneFactory.textScene(texts.get("3"), this));
-        // addScene(SceneFactory.gameScene(PRACTICS_NAME_2, this));
-        // addScene(SceneFactory.gameRoundResult(PRACTICS_NAME_2, this));
-
-        // addScene(SceneFactory.textScene(texts.get("4"), this));
+        addScene(SceneFactory.textScene(texts.get("1"), this));
+        addScene(SceneFactory.textScene(texts.get("2"), this));
+        addScene(SceneFactory.gameScene(PRACTICS_NAME_1, this));
+        addScene(SceneFactory.gameRoundResult(PRACTICS_NAME_1, this));
+        addScene(SceneFactory.textScene(texts.get("3"), this));
+        addScene(SceneFactory.gameScene(PRACTICS_NAME_2, this));
+        addScene(SceneFactory.gameRoundResult(PRACTICS_NAME_2, this));
+        addScene(SceneFactory.textScene(texts.get("4"), this));
         for (int i = 1; i <= 15; i++) {
             final String gameName = String.valueOf(i);
             addScene(SceneFactory.gameScene(gameName, this));
             addScene(SceneFactory.gameRoundResult(gameName, this));
-            // addScene(SceneFactory.rateGameScene(gameName, this));
+            addScene(SceneFactory.rateGameScene(gameName, this));
         }
-        // addScene(SceneFactory.totalScoreScene(this));
-        // addScene(SceneFactory.textScene(texts.get("5"), "Завершить", this));
+        addScene(SceneFactory.totalScoreScene(this));
+        addScene(SceneFactory.textScene(texts.get("5"), "Завершить", this));
     }
 
     private void addScene(IChickenScene scene) {

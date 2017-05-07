@@ -57,7 +57,7 @@ public class GameRoundScene implements IChickenScene {
         final VBox pane = new VBox();
 
         final BorderPane dataLinePane = new BorderPane();
-        dataLinePane.setPadding(new Insets(200, 0, 200, 0));
+        dataLinePane.setPadding(new Insets(100, 0, 200, 0));
 
         final VBox wrapper = new VBox();
         final ImageView trafficLight = new ImageView(TrafficLightState.GREEN.getImage());
