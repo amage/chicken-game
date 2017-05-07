@@ -12,12 +12,9 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleLongProperty;
-
 public class Experiment {
     public final static long SCORE_DEVIDER = 100000;
-    private final LongProperty playerNumber = new SimpleLongProperty(0);
+    private String playerName;
 
     private final Map<String, Round> rounds = new HashMap<>();
 
@@ -27,18 +24,6 @@ public class Experiment {
     public Round getRound(String name) {
         rounds.putIfAbsent(name, new Round(name));
         return rounds.get(name);
-    }
-
-    public final long getPlayerNumber() {
-        return playerNumber.get();
-    }
-
-    public final void setPlayerNumber(long value) {
-        playerNumber.set(value);
-    }
-
-    public LongProperty playerNumberProperty() {
-        return playerNumber;
     }
 
     public long getTotalScore() {
@@ -67,7 +52,7 @@ public class Experiment {
 
     private CSVResultLine prepareCSV() {
         final CSVResultLine line = new CSVResultLine();
-        line.setPid(String.valueOf(getPlayerNumber()));
+        line.setPid(String.valueOf(getPlayerName()));
         for (int i = 1; i <= 15; i++) {
             final Round round = getRound(String.valueOf(i));
             try {
@@ -86,5 +71,13 @@ public class Experiment {
             }
         }
         return line;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 }

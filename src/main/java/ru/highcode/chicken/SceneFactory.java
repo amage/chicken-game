@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -46,26 +45,15 @@ public class SceneFactory {
         pane.setHgap(20);
         pane.setVgap(20);
         pane.add(new Label("Данные об испытуемом"), 0, 0, 2, 1);
-        pane.add(new Label("Номер"), 0, 1);
+        pane.add(new Label("ФИО"), 0, 1);
 
         final TextField playerNumber = new TextField();
-        playerNumber.setTextFormatter(new TextFormatter<>(c -> {
-            if (c.getControlNewText().isEmpty()) {
-                return c;
-            }
-            try {
-                Long.parseLong(c.getControlNewText());
-            } catch (final Exception e) {
-                return null;
-            }
-            return c;
-        }));
         pane.add(playerNumber, 1, 1);
         final HBox bbox = new HBox();
         final Button button = new Button("Старт");
         button.disableProperty().bind(Bindings.isEmpty(playerNumber.textProperty()));
         button.setOnAction(e -> {
-            game.getExperiment().setPlayerNumber(Long.parseLong(playerNumber.getText()));
+            game.getExperiment().setPlayerName(playerNumber.getText());
             game.nextScene();
         });
         bbox.getChildren().add(button);

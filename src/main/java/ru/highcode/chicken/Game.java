@@ -41,11 +41,11 @@ public class Game extends Application implements IGame {
 
     private void recreateScenario() {
         scenario.clear();
-        // addScene(SceneFactory.loginScene(this));
+        addScene(SceneFactory.loginScene(this));
         // addScene(SceneFactory.textScene(texts.get("1"), this));
         // addScene(SceneFactory.textScene(texts.get("2"), this));
         // addScene(SceneFactory.gameScene(PRACTICS_NAME_1, this));
-        addScene(SceneFactory.rateGameScene(PRACTICS_NAME_1, this));
+        // addScene(SceneFactory.rateGameScene(PRACTICS_NAME_1, this));
         // addScene(SceneFactory.textScene(texts.get("3"), this));
         // addScene(SceneFactory.gameScene(PRACTICS_NAME_2, this));
         // addScene(SceneFactory.rateGameScene(PRACTICS_NAME_2, this));
