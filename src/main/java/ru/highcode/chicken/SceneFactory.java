@@ -180,14 +180,21 @@ public class SceneFactory {
             @Override
             public void activated() {
                 final Round round = game.getExperiment().getRound(gameName);
+                final StringBuilder sb = new StringBuilder();
                 if (round.isWin()) {
-                    message.setText(String.format("Ваш счет за раунд: %d",
+                    sb.append(String.format("Очки за раунд: %d",
                             round.getTotalScore()));
+                    if (!round.isPractics()) {
+                        sb.append("\n");
+                        sb.append(String.format("Общие очки за игру: %d", game.getExperiment().getTotalScore()));
+                    }
+
                 } else {
-                    message.setText(String.format(
+                    sb.append(String.format(
                             "Вы попали в аварию и разбились.\n" + "Вы теряете очки за этот раунд.\n" + "У вас %d очков",
                             game.getExperiment().getTotalScore()));
                 }
+                message.setText(sb.toString());
             }
         };
     }

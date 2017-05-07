@@ -51,12 +51,12 @@ public class Game extends Application implements IGame {
         // addScene(SceneFactory.gameRoundResult(PRACTICS_NAME_2, this));
 
         // addScene(SceneFactory.textScene(texts.get("4"), this));
-        // for (int i = 1; i <= 15; i++) {
-        // final String gameName = String.valueOf(i);
-        // addScene(SceneFactory.gameScene(gameName, this));
-        // addScene(SceneFactory.gameRoundResult(gameName, this));
-        // addScene(SceneFactory.rateGameScene(gameName, this));
-        // }
+        for (int i = 1; i <= 15; i++) {
+            final String gameName = String.valueOf(i);
+            addScene(SceneFactory.gameScene(gameName, this));
+            addScene(SceneFactory.gameRoundResult(gameName, this));
+            // addScene(SceneFactory.rateGameScene(gameName, this));
+        }
         // addScene(SceneFactory.totalScoreScene(this));
         // addScene(SceneFactory.textScene(texts.get("5"), "Завершить", this));
     }
