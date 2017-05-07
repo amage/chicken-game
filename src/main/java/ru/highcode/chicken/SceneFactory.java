@@ -117,8 +117,7 @@ public class SceneFactory {
 
             @Override
             public Scene getScene() {
-                final String cssUrl = SceneFactory.class.getResource("style.css").toExternalForm();
-                scene.getStylesheets().add(cssUrl);
+                scene.getStylesheets().add("file:style.css");
                 return scene;
             }
 
