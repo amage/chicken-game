@@ -135,9 +135,7 @@ public class GameRoundScene implements IChickenScene {
         final String format = "%,d";
 
         currentScoreText.setText(String.format(format, round.getTotalScoreView()).replace(',', ' '));
-        totalScoreText
-        .setText(String.format(format, experiment.getTotalScoreView() + round.getTotalScoreView()).replace(',',
-                ' '));
+        totalScoreText.setText(String.format(format, experiment.getTotalScoreView()).replace(',', ' '));
     }
 
     private GridPane createScorePane(final Text currentScoreText, final Text totalScoreText) {

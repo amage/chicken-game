@@ -194,10 +194,11 @@ public class SceneFactory {
                     }
 
                 } else {
-                    sb.append(String.format(
-                            "Вы попали в аварию и разбились.\n\n" + "Вы теряете очки за этот раунд.\n"
-                                    + String.format("Общие очки за игру: %d", game.getExperiment().getTotalScoreView()),
-                                    game.getExperiment().getTotalScoreView()));
+                    sb.append("Вы попали в аварию и разбились.\n");
+                    if (!round.isPractics()) {
+                        sb.append("\nВы теряете очки за этот раунд.\n");
+                        sb.append(String.format("Общие очки за игру: %d", game.getExperiment().getTotalScoreView()));
+                    }
                 }
                 message.setText(sb.toString());
             }
