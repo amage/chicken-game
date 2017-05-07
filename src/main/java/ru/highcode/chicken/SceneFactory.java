@@ -133,7 +133,7 @@ public class SceneFactory {
         final VBox pane = new VBox();
         pane.setAlignment(Pos.CENTER);
         pane.setSpacing(20);
-        final Text scoreLabel = new Text("Вы заработали: ");
+        final Text scoreLabel = new Text("Игра закончена!\n\nВы заработали: ");
         scoreLabel.setFont(new Font(21));
         pane.getChildren().add(scoreLabel);
         final Text scoreText = new Text();

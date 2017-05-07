@@ -50,7 +50,7 @@ public class GameRoundScene implements IChickenScene {
         }
         final Experiment experiment = game.getExperiment();
         this.round = experiment.getRound(gameName);
-        this.roundTime = Long.parseLong(settings.getProperty(gameName + ".roundTime"));
+        this.roundTime = Double.parseDouble(settings.getProperty(gameName + ".roundTime"));
 
         final VBox pane = new VBox();
 

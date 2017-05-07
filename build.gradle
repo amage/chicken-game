@@ -1,9 +1,24 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "https://mini2dx.org/maven/content/repositories/thirdparty" }
+        maven { url "https://mini2dx.org/maven/content/repositories/releases" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'org.mini2Dx', name: 'parcl', version: '1.1.0'
+    }
+}
+
 plugins {
     id 'java'
     id 'eclipse'
     id 'idea'
     id 'application'
 }
+
+apply plugin: "org.mini2Dx.parcl"
+
 
 mainClassName = "ru.highcode.chicken.Game"
 
@@ -26,4 +41,24 @@ dependencies {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.4.1'
+}
+
+parcl {
+    exe {
+        exeName = "chicken"
+    }
+
+    app {
+        appName = "Chicken Game"
+        icon = "relative/path/to/icon.icns"
+        applicationCategory = "public.app-category.adventure-games"
+        displayName = 'Chicken Game'
+        identifier = 'ru.highcode.chicken'
+        copyright = 'Copyright 2017 Zoya Shchekochikhina'
+    }
+
+    linux {
+        binName = "chicken"
+        withJre("$System.env.JAVA_HOME")
+    }
 }

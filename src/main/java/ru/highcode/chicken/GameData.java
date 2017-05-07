@@ -16,7 +16,7 @@ public class GameData {
         final GameData result = new GameData();
         Files.list(Paths.get("texts")).forEach(p -> {
             try {
-                result.texts.put(p.getFileName().toString(), new String(Files.readAllBytes(p)));
+                result.texts.put(p.getFileName().toString(), new String(Files.readAllBytes(p), "UTF-8"));
             } catch (final IOException e) {
                 e.printStackTrace();
             }
