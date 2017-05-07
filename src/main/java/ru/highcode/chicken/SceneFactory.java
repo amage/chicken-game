@@ -79,7 +79,7 @@ public class SceneFactory {
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
         pane.setVgap(20);
-        final String RISK_VALUATION_TEXT = "Оценте, насколько рискованным было Ваше поведение в прошлом раунде от 0 до 10"
+        final String RISK_VALUATION_TEXT = "Оценте, насколько рискованным было Ваше поведение в прошлом раунде от 1 до 10"
                 + "\n" + "(где 1 — совсем не рискованное, 10 — очень рискованное).";
         pane.add(new Label(RISK_VALUATION_TEXT), 0, 0, 2, 1);
 
@@ -191,8 +191,9 @@ public class SceneFactory {
 
                 } else {
                     sb.append(String.format(
-                            "Вы попали в аварию и разбились.\n" + "Вы теряете очки за этот раунд.\n" + "У вас %d очков",
-                            game.getExperiment().getTotalScore()));
+                            "Вы попали в аварию и разбились.\n" + "Вы теряете очки за этот раунд.\n"
+                                    + String.format("Общие очки за игру: %d", game.getExperiment().getTotalScore()),
+                                    game.getExperiment().getTotalScore()));
                 }
                 message.setText(sb.toString());
             }
