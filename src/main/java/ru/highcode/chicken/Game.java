@@ -28,6 +28,7 @@ public class Game extends Application implements IGame {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
+        this.primaryStage.setFullScreenExitHint("");
         primaryStage.setTitle("Chicken Game");
          primaryStage.setFullScreen(true);
         // primaryStage.setMaximized(true);
@@ -71,10 +72,9 @@ public class Game extends Application implements IGame {
             recreateScenario();
         }
         final IChickenScene scene = scenario.get(currentScene);
-        primaryStage.hide();
         scene.activated();
         primaryStage.setScene(scene.getScene());
-        primaryStage.show();
+        primaryStage.setFullScreen(true);
     }
 
     @Override
