@@ -79,7 +79,7 @@ public class SceneFactory {
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(20);
         pane.setVgap(20);
-        final String RISK_VALUATION_TEXT = "Оцени, насколько рискованным было твое поведение в прошлом раунде от 0 до 10"
+        final String RISK_VALUATION_TEXT = "Оценте, насколько рискованным было Ваше поведение в прошлом раунде от 0 до 10"
                 + "\n" + "(где 1 — совсем не рискованное, 10 — очень рискованное).";
         pane.add(new Label(RISK_VALUATION_TEXT), 0, 0, 2, 1);
 
