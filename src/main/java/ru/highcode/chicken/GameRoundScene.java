@@ -9,7 +9,6 @@ import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -23,11 +22,11 @@ import ru.highcode.chicken.data.Round;
 public class GameRoundScene implements IChickenScene {
     private static final long EOG_DELAY = 1;
     private final static Font BIG_FONT = new Font(26);
+    private static final double CARWAY_POT_PADDING = 0;
     private Scene scene;
     private double roundTime;
     private final Properties settings = new Properties();
     private Round round;
-    private final Image emptyImage = new Image("file:empty.png");
 
     private long switchSceneDelay;
     private final String gameName;
@@ -59,9 +58,6 @@ public class GameRoundScene implements IChickenScene {
 
         final BorderPane dataLinePane = new BorderPane();
         dataLinePane.setPadding(new Insets(200, 0, 200, 0));
-
-        final ImageView resultImage = new ImageView(emptyImage);
-        dataLinePane.setCenter(resultImage);
 
         final VBox wrapper = new VBox();
         final ImageView trafficLight = new ImageView(TrafficLightState.GREEN.getImage());
@@ -117,11 +113,10 @@ public class GameRoundScene implements IChickenScene {
                 }
             }
 
-
         };
         at.start();
 
-        carWay.setPadding(new Insets(100, 0, 0, 0));
+        carWay.setPadding(new Insets(CARWAY_POT_PADDING, 0, 0, 0));
         pane.getChildren().add(carWay);
 
         final Scene scene = new Scene(pane);
@@ -139,10 +134,11 @@ public class GameRoundScene implements IChickenScene {
     }
 
     private void setScore(final Experiment experiment, final Text currentScoreText, final Text totalScoreText) {
-        String format = "%,d";
+        final String format = "%,d";
 
         currentScoreText.setText(String.format(format, round.getTotalScore()).replace(',', ' '));
-        totalScoreText.setText(String.format(format, experiment.getTotalScore() + round.getTotalScore()).replace(',', ' '));
+        totalScoreText
+        .setText(String.format(format, experiment.getTotalScore() + round.getTotalScore()).replace(',', ' '));
     }
 
     private GridPane createScorePane(final Text currentScoreText, final Text totalScoreText) {
