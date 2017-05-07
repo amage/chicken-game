@@ -59,7 +59,6 @@ public class CarWay extends Pane {
         if (getRoundStartNanoTime() == 0) {
             roundStartNanoTime = startNanoTime;
         }
-        startNanoTime = System.nanoTime();
         startPos = getCarPos();
         run = true;
         round.addStep(new StepHistory(startNanoTime));
