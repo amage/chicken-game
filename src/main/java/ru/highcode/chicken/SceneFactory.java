@@ -5,10 +5,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -90,30 +92,31 @@ public class SceneFactory {
         pane.setHgap(20);
         pane.setVgap(20);
         final String RISK_VALUATION_TEXT = "Оцени, насколько рискованным было твое поведение в прошлом раунде от 0 до 10"
-                + "\n" + "(где 0 — совсем не рискованное, 10 — очень рискованное).";
+                + "\n" + "(где 1 — совсем не рискованное, 10 — очень рискованное).";
         pane.add(new Label(RISK_VALUATION_TEXT), 0, 0, 2, 1);
-        pane.add(new Label("Оценка"), 0, 1);
-        final TextField playerGameRate = new TextField("");
-        playerGameRate.setTextFormatter(new TextFormatter<>(c -> {
-            if (c.getControlNewText().isEmpty()) {
-                return c;
-            }
-            try {
-                final int rate = Integer.parseInt(c.getControlNewText());
-                if (rate >= 0 && rate <= 10) {
-                    return c;
-                }
-                return null;
-            } catch (final Exception e) {
-                return null;
-            }
-        }));
-        pane.add(playerGameRate, 1, 1);
+
+        final HBox ratePane = new HBox();
+        ratePane.setAlignment(Pos.CENTER);
+
+        final Slider slider = new Slider();
+        HBox.setHgrow(slider, Priority.ALWAYS);
+        slider.setMin(1);
+        slider.setMax(10);
+        slider.setValue(5);
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit(1);
+        slider.setMinorTickCount(0);
+        slider.setSnapToTicks(true);
+        slider.setBlockIncrement(1);
+        slider.setFocusTraversable(true);
+        ratePane.getChildren().add(slider);
+        pane.add(ratePane, 0, 1, 2, 1);
+
         final HBox bbox = new HBox();
         final Button button = new Button("Оценить");
-        button.disableProperty().bind(Bindings.isEmpty(playerGameRate.textProperty()));
         button.setOnAction(e -> {
-            game.getExperiment().getRound(gameName).setRisk(Integer.parseInt(playerGameRate.textProperty().get()));
+            game.getExperiment().getRound(gameName).setRisk(slider.valueProperty().getValue().intValue());
             game.nextScene();
         });
         bbox.getChildren().add(button);
@@ -129,7 +132,7 @@ public class SceneFactory {
 
             @Override
             public void activated() {
-                playerGameRate.setText("");
+                slider.setValue(5);
             }
         };
     }
