@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import javafx.application.Application;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import ru.highcode.chicken.data.Experiment;
 
 public class Game extends Application implements IGame {
+    public static final double SCORE_RATE = 0.001;
+    public final static Font BIG_FONT = new Font(26);
     public static final String PRACTICS_NAME_1 = "practics1";
     public static final String PRACTICS_NAME_2 = "practics2";
     private final List<IChickenScene> scenario = new ArrayList<>();

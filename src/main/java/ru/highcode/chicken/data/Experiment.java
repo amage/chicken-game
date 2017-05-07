@@ -12,6 +12,8 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
+import ru.highcode.chicken.Game;
+
 public class Experiment {
     public final static long SCORE_DEVIDER = 100000;
     private String playerName;
@@ -24,6 +26,10 @@ public class Experiment {
     public Round getRound(String name) {
         rounds.putIfAbsent(name, new Round(name));
         return rounds.get(name);
+    }
+
+    public long getTotalScoreView() {
+        return (long) (getTotalScore() * Game.SCORE_RATE);
     }
 
     public long getTotalScore() {

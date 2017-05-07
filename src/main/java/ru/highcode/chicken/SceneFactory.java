@@ -1,6 +1,7 @@
 package ru.highcode.chicken;
 
 import javafx.beans.binding.Bindings;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -81,16 +82,15 @@ public class SceneFactory {
         pane.setVgap(20);
         final String RISK_VALUATION_TEXT = "Оценте, насколько рискованным было Ваше поведение в прошлом раунде от 1 до 10"
                 + "\n" + "(где 1 — совсем не рискованное, 10 — очень рискованное).";
-        pane.add(new Label(RISK_VALUATION_TEXT), 0, 0, 2, 1);
+        final Label label = new Label(RISK_VALUATION_TEXT);
+        label.setFont(Game.BIG_FONT);
+        pane.add(label, 0, 0, 2, 1);
 
         final HBox ratePane = new HBox();
         ratePane.setAlignment(Pos.CENTER);
 
-        final Slider slider = new Slider();
+        final Slider slider = new Slider(1, 10, 5);
         HBox.setHgrow(slider, Priority.ALWAYS);
-        slider.setMin(1);
-        slider.setMax(10);
-        slider.setValue(5);
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setMajorTickUnit(1);
@@ -98,7 +98,9 @@ public class SceneFactory {
         slider.setSnapToTicks(true);
         slider.setBlockIncrement(1);
         slider.setFocusTraversable(true);
+
         ratePane.getChildren().add(slider);
+        ratePane.setPadding(new Insets(20, 300, 0, 300));
         pane.add(ratePane, 0, 1, 2, 1);
 
         final HBox bbox = new HBox();
@@ -115,6 +117,8 @@ public class SceneFactory {
 
             @Override
             public Scene getScene() {
+                final String cssUrl = SceneFactory.class.getResource("style.css").toExternalForm();
+                scene.getStylesheets().add(cssUrl);
                 return scene;
             }
 
@@ -150,7 +154,7 @@ public class SceneFactory {
 
             @Override
             public void activated() {
-                scoreText.setText(String.format("%d очков", game.getExperiment().getTotalScore()));
+                scoreText.setText(String.format("%d очков", game.getExperiment().getTotalScoreView()));
             }
         };
     }
@@ -182,18 +186,18 @@ public class SceneFactory {
                 final Round round = game.getExperiment().getRound(gameName);
                 final StringBuilder sb = new StringBuilder();
                 if (round.isWin()) {
-                    sb.append(String.format("Очки за раунд: %d",
-                            round.getTotalScore()));
+                    sb.append(String.format("Ура! Вы не попали на красный свет!\n\nОчки за раунд: %d",
+                            round.getTotalScoreView()));
                     if (!round.isPractics()) {
                         sb.append("\n");
-                        sb.append(String.format("Общие очки за игру: %d", game.getExperiment().getTotalScore()));
+                        sb.append(String.format("Общие очки за игру: %d", game.getExperiment().getTotalScoreView()));
                     }
 
                 } else {
                     sb.append(String.format(
-                            "Вы попали в аварию и разбились.\n" + "Вы теряете очки за этот раунд.\n"
-                                    + String.format("Общие очки за игру: %d", game.getExperiment().getTotalScore()),
-                                    game.getExperiment().getTotalScore()));
+                            "Вы попали в аварию и разбились.\n\n" + "Вы теряете очки за этот раунд.\n"
+                                    + String.format("Общие очки за игру: %d", game.getExperiment().getTotalScoreView()),
+                                    game.getExperiment().getTotalScoreView()));
                 }
                 message.setText(sb.toString());
             }

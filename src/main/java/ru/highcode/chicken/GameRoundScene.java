@@ -14,14 +14,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import ru.highcode.chicken.data.Experiment;
 import ru.highcode.chicken.data.Round;
 
 public class GameRoundScene implements IChickenScene {
     private static final long EOG_DELAY = 1;
-    private final static Font BIG_FONT = new Font(26);
     private static final double CARWAY_POT_PADDING = 0;
     private Scene scene;
     private double roundTime;
@@ -71,9 +69,9 @@ public class GameRoundScene implements IChickenScene {
         final CarWay carWay = new CarWay(settings, round);
 
         final Text currentScoreText = new Text();
-        currentScoreText.setFont(BIG_FONT);
+        currentScoreText.setFont(Game.BIG_FONT);
         final Text totalScoreText = new Text();
-        totalScoreText.setFont(BIG_FONT);
+        totalScoreText.setFont(Game.BIG_FONT);
         setScore(experiment, currentScoreText, totalScoreText);
 
         dataLinePane.setLeft(createScorePane(currentScoreText, totalScoreText));
@@ -136,22 +134,23 @@ public class GameRoundScene implements IChickenScene {
     private void setScore(final Experiment experiment, final Text currentScoreText, final Text totalScoreText) {
         final String format = "%,d";
 
-        currentScoreText.setText(String.format(format, round.getTotalScore()).replace(',', ' '));
+        currentScoreText.setText(String.format(format, round.getTotalScoreView()).replace(',', ' '));
         totalScoreText
-        .setText(String.format(format, experiment.getTotalScore() + round.getTotalScore()).replace(',', ' '));
+        .setText(String.format(format, experiment.getTotalScoreView() + round.getTotalScoreView()).replace(',',
+                ' '));
     }
 
     private GridPane createScorePane(final Text currentScoreText, final Text totalScoreText) {
         final GridPane scorePane = new GridPane();
         if (!round.isPractics()) {
             final Text totalScoreLabel = new Text("Очки за всю игру: ");
-            totalScoreLabel.setFont(BIG_FONT);
+            totalScoreLabel.setFont(Game.BIG_FONT);
             scorePane.add(totalScoreLabel, 0, 1);
             scorePane.add(totalScoreText, 1, 1);
         }
 
         final Text roundScoreLabel = new Text("Очки за раунд: ");
-        roundScoreLabel.setFont(BIG_FONT);
+        roundScoreLabel.setFont(Game.BIG_FONT);
         scorePane.add(roundScoreLabel, 0, 0);
         scorePane.add(currentScoreText, 1, 0);
         scorePane.setPadding(new Insets(60, 20, 0, 20));

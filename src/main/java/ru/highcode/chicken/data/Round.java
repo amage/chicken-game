@@ -38,6 +38,10 @@ public class Round {
         steps.addLast(step);
     }
 
+    public long getTotalScoreView() {
+        return (long) (getTotalScore() * Game.SCORE_RATE);
+    }
+
     public long getTotalScore() {
         if (steps.isEmpty()) {
             return 0;
